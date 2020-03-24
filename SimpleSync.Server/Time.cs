@@ -50,6 +50,9 @@ namespace SimpleSync.Server
 
         #region Ticks
 
+        /// <summary>
+        /// Updates the Hours and Minutes over time.
+        /// </summary>
         [Tick]
         public async Task UpdateTime()
         {
