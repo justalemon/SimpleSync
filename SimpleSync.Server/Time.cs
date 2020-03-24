@@ -1,5 +1,6 @@
 ﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
+using System;
 using System.Threading.Tasks;
 
 namespace SimpleSync.Server
@@ -30,6 +31,19 @@ namespace SimpleSync.Server
 
         public Time()
         {
+            // Add a couple of exports to set the time
+            Exports.Add("setTime", new Action<int, int>(SetTime));
+        }
+
+        #endregion
+
+        #region Exports
+
+        public void SetTime(int hour, int minute)
+        {
+            // Just save the values
+            hours = hour;
+            minutes = minute;
         }
 
         #endregion
