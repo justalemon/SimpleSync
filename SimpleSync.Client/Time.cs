@@ -27,6 +27,8 @@ namespace SimpleSync.Client
 
         public Time()
         {
+            // Tell the Server to send back the correct time
+            TriggerServerEvent("simplesync:requestTime");
         }
 
         #endregion

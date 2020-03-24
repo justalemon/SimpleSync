@@ -13,6 +13,8 @@ namespace SimpleSync.Client
 
         public Weather()
         {
+            // Once this script is loaded, ask the sever for sync
+            TriggerServerEvent("simplesync:requestWeather");
         }
 
         #endregion

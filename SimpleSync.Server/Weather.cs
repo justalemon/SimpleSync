@@ -43,6 +43,20 @@ namespace SimpleSync.Server
 
         #endregion
 
+        #region Network Events
+
+        /// <summary>
+        /// Sends the up to date weather to the server.
+        /// </summary>
+        [EventHandler("simplesync:requestWeather")]
+        public void RequestWeather([FromSource]Player player)
+        {
+            // Just tell the client to set the correct weather
+            player.TriggerEvent("simplesync:setWeather", currentWeather);
+        }
+
+        #endregion
+
         #region Commands
 
         /// <summary>
