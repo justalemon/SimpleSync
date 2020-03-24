@@ -25,8 +25,9 @@ install:
 build_script:
   - msbuild %APPVEYOR_PROJECT_NAME%.sln /t:Build /p:Configuration=Release
 
-artifacts:
-  - path: '**\*.7z'
+after_build:
+  - 7z a %APPVEYOR_PROJECT_NAME%.7z %APPVEYOR_BUILD_FOLDER%\bin\Release\*
+  - appveyor PushArtifact %APPVEYOR_PROJECT_NAME%.7z
 
 deploy:
   - provider: GitHub
