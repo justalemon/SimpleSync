@@ -1,6 +1,7 @@
 ﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SimpleSync.Server
@@ -107,6 +108,26 @@ namespace SimpleSync.Server
             if (Convars.TimeType == SyncType.Static)
             {
                 return;
+            }
+        }
+
+        #endregion
+
+        #region Commands
+
+        /// <summary>
+        /// Command that shows the available Time Zones for the Real Time.
+        /// </summary>
+        [Command("timezones", Restricted = true)]
+        public void TimeZonesCommand(int source, List<object> args, string raw)
+        {
+            // Say that we are going to print the time zones
+            Debug.WriteLine("Time Zones available:");
+            // Iterate over the list of time zones
+            foreach (TimeZoneInfo tz in TimeZoneInfo.GetSystemTimeZones())
+            {
+                // And print it on the console
+                Debug.WriteLine($"{tz.Id} - {tz.DisplayName}");
             }
         }
 
