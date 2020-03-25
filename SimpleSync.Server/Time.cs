@@ -162,6 +162,40 @@ namespace SimpleSync.Server
                 Debug.WriteLine($"{tz.Id} - {tz.DisplayName}");
             }
         }
+        /// <summary>
+        /// Gets or Sets the current time zone.
+        /// </summary>
+        [Command("timezone", Restricted = true)]
+        public void TimeZoneCommand(int source, List<object> args, string raw)
+        {
+            // If there are no arguments specified, show the current time zone and return
+            if (args.Count == 0)
+            {
+                Debug.WriteLine($"The current Time Zone is set to {Convars.TimeZone}");
+                return;
+            }
+
+            // Get the timezone as a string
+            string timeZone = args[0].ToString();
+            // Try to get the timezone with the specified name
+            try
+            {
+                TimeZoneInfo.FindSystemTimeZoneById(timeZone);
+            }
+            // If the timezone was not found, notify it and return
+            catch (TimeZoneNotFoundException)
+            {
+                Debug.WriteLine($"The Time Zone {timeZone} does not exists!");
+                Debug.WriteLine("Remember that the Time Zone IDs are case sensitive");
+                Debug.WriteLine("Use the /timezones command to show all of the TZs");
+                return;
+            }
+
+            // If we got here, the Time Zone is valid so save it
+            Convars.TimeZone = timeZone;
+            // And notify it
+            Debug.WriteLine($"The Time Zone was set to {timeZone}!");
+        }
 
         #endregion
     }
