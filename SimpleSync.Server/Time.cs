@@ -105,9 +105,41 @@ namespace SimpleSync.Server
                 }
             }
             // If the time is set to static, the client already has the previous time
-            if (Convars.TimeType == SyncType.Static)
+            else if (Convars.TimeType == SyncType.Static)
             {
                 return;
+            }
+            // If the time is set to real
+            else if (Convars.TimeType == SyncType.Real)
+            {
+                // If the game time is over or equal than the next fetch time
+                if (API.GetGameTimer() >= nextFetch)
+                {
+                    // Create a place to store the time zone
+                    DateTime dateTime;
+                    // Try to convert the time to the specified timezone
+                    try
+                    {
+                        dateTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, Convars.TimeZone);
+                    }
+                    // If the timezone was not found, set PST and return
+                    catch (TimeZoneNotFoundException)
+                    {
+                        Debug.WriteLine($"The Time Zone '{Convars.TimeZone}' was not found!");
+                        Debug.WriteLine($"Use the command /timezones to see the available TZs");
+                        Debug.WriteLine($"Just in case, we changed the TZ to 'Pacific Standard Time'");
+                        Convars.TimeZone = "Pacific Standard Time";
+                        return;
+                    }
+
+                    // If no errors happened, save the hours and minutes
+                    hours = dateTime.Hour;
+                    minutes = dateTime.Minute;
+                    // Set the next fetch time to one second in the future
+                    nextFetch = API.GetGameTimer() + 1000;
+                    // And send it to all of the clients
+                    TriggerClientEvent("simplesync:setTime", hours, minutes);
+                }
             }
         }
 

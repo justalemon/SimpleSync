@@ -28,5 +28,13 @@ namespace SimpleSync.Server
         /// On Dynamic Time: The time between the minute bumps.
         /// </summary>
         public static int Scale => API.GetConvarInt("simplesync_scale", 2000);
+        /// <summary>
+        /// On Real Time: The time zone to fetch the up to date time.
+        /// </summary>
+        public static string TimeZone
+        {
+            get => API.GetConvar("simplesync_timezone", "Pacific Standard Time");
+            set => API.SetConvar("simplesync_timezone", value);
+        }
     }
 }
