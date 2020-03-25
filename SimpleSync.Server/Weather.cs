@@ -1,6 +1,12 @@
 ﻿using CitizenFX.Core;
+using CitizenFX.Core.Native;
+using Flurl.Http;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace SimpleSync.Server
 {
@@ -11,6 +17,14 @@ namespace SimpleSync.Server
     {
         #region Fields
 
+        /// <summary>
+        /// The URL to fetch the up to date Weather from OpenWeather.
+        /// </summary>
+        private const string openWeatherURL = "http://api.openweathermap.org/data/2.5/weather?q={0}&appid={1}";
+        /// <summary>
+        /// The next time where we should check the weather.
+        /// </summary>
+        private long nextFetch = 0;
         /// <summary>
         /// The valid weather names.
         /// </summary>
@@ -121,8 +135,8 @@ namespace SimpleSync.Server
 
         public void SetWeather(string weather)
         {
-            // If the weather is on the list
-            if (validWeather.Contains(weather))
+            // If the weather is on the list and the Weather Type is not set to Real
+            if (validWeather.Contains(weather) && Convars.WeatherType != SyncType.Real)
             {
                 // Save it
                 currentWeather = weather;
@@ -143,6 +157,77 @@ namespace SimpleSync.Server
         {
             // Just tell the client to set the correct weather
             player.TriggerEvent("simplesync:setWeather", currentWeather);
+        }
+
+        #endregion
+
+        #region Ticks
+
+        /// <summary>
+        /// Changes the weather over time.
+        /// </summary>
+        [Tick]
+        public async Task UpdateWeather()
+        {
+            // If the Weather is set to Real
+            if (Convars.WeatherType == SyncType.Real)
+            {
+                // If the game time is over or equal than the next fetch time
+                if (API.GetGameTimer() >= nextFetch)
+                {
+                    // If the OpenWeather API Key is empty, return
+                    if (string.IsNullOrWhiteSpace(Convars.OpenWeatherKey))
+                    {
+                        return;
+                    }
+                    // If the weather API is empty, return
+                    if (string.IsNullOrWhiteSpace(Convars.OpenWeatherCity))
+                    {
+                        return;
+                    }
+
+                    // Otherwise, format the correct URL
+                    string url = string.Format(openWeatherURL, Convars.OpenWeatherCity, Convars.OpenWeatherKey);
+                    // Make the request
+                    HttpResponseMessage response = await url.WithHeader("User-Agent", "SimpleSync (+https://github.com/justalemon/SimpleSync)").GetAsync();
+                    // And get the text of the response
+                    string text = await response.Content.ReadAsStringAsync();
+
+                    // If the status code is not 200
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        // Show a message with the status code and content
+                        Debug.WriteLine($"OpenWeather returned code {response.StatusCode}! ({text})");
+                        // Leave a 60 seconds cooldown
+                        nextFetch = API.GetGameTimer() + 60000;
+                        // And return
+                        return;
+                    }
+
+                    // Otherwise, parse the response into a JObject
+                    JObject obj = JObject.Parse(text);
+                    // And get the Weather ID
+                    int id = (int)obj["weather"][0]["id"];
+
+                    // If we have a GTA V weather for that ID
+                    if (openWeatherCodes.ContainsKey(id))
+                    {
+                        // Save the weather
+                        currentWeather = openWeatherCodes[id];
+                        // And send it to all of the clients
+                        TriggerClientEvent("simplesync:setWeather", currentWeather);
+                    }
+                    // If we don't have it
+                    else
+                    {
+                        // Log it in the console
+                        Debug.WriteLine($"Weather ID {id} does not has a GTA V Weather!");
+                    }
+
+                    // Finally, add a delay of 30 seconds
+                    nextFetch = API.GetGameTimer() + 30000;
+                }
+            }
         }
 
         #endregion
