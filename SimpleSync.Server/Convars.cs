@@ -29,6 +29,14 @@ namespace SimpleSync.Server
         /// </summary>
         public static int Scale => API.GetConvarInt("simplesync_scale", 2000);
         /// <summary>
+        /// The OpenWeatherMap API Key.
+        /// </summary>
+        public static string OpenWeatherKey => API.GetConvar("simplesync_openweatherkey", "");
+        /// <summary>
+        /// The city to query from OpenWeatherMap.
+        /// </summary>
+        public static string OpenWeatherCity => API.GetConvar("simplesync_openweathercity", "");
+        /// <summary>
         /// On Real Time: The time zone to fetch the up to date time.
         /// </summary>
         public static string TimeZone
