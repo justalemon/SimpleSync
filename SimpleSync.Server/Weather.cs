@@ -30,6 +30,78 @@ namespace SimpleSync.Server
             "BLIZZARD"
         };
         /// <summary>
+        /// Dictionary with the associations between OpenWeather condition codes and GTA V Weather hashes.
+        /// https://openweathermap.org/weather-conditions
+        /// </summary>
+        private static readonly Dictionary<int, string> openWeatherCodes = new Dictionary<int, string>
+        {
+            // Group 2xx: Thunderstorm
+            { 200, "THUNDER" }, // thunderstorm with light rain	
+            { 201, "THUNDER" }, // thunderstorm with rain
+            { 202, "THUNDER" }, // thunderstorm with heavy rain
+            { 210, "THUNDER" }, // light thunderstorm
+            { 211, "THUNDER" }, // thunderstorm
+            { 212, "THUNDER" }, // heavy thunderstorm
+            { 221, "THUNDER" }, // ragged thunderstorm
+            { 230, "THUNDER" }, // thunderstorm with light drizzle
+            { 231, "THUNDER" }, // thunderstorm with drizzle
+            { 232, "THUNDER" }, // thunderstorm with heavy drizzle
+            // Group 3xx: Drizzle
+            // TODO: Use _SET_RAIN_FX_INTENSITY to really make it look like Drizzle (0.0f?)
+            { 300, "RAIN" }, // light intensity drizzle
+            { 301, "RAIN" }, // drizzle
+            { 302, "RAIN" }, // heavy intensity drizzle
+            { 310, "RAIN" }, // light intensity drizzle rain
+            { 311, "RAIN" }, // drizzle rain
+            { 312, "RAIN" }, // heavy intensity drizzle rain
+            { 313, "RAIN" }, // shower rain and drizzle
+            { 314, "RAIN" }, // heavy shower rain and drizzle
+            { 321, "RAIN" }, // shower drizzle
+            // Group 5xx: Rain
+            { 500, "RAIN" }, // light rain
+            { 501, "RAIN" }, // moderate rain
+            { 502, "RAIN" }, // heavy intensity rain
+            { 503, "RAIN" }, // very heavy rain
+            { 504, "RAIN" }, // extreme rain
+            { 511, "RAIN" }, // freezing rain
+            { 520, "RAIN" }, // light intensity shower rain
+            { 521, "RAIN" }, // shower rain
+            { 522, "RAIN" }, // heavy intensity shower rain
+            { 531, "RAIN" }, // ragged shower rain
+            // Group 6xx: Snow
+            { 600, "XMAS" }, // light snow
+            { 601, "XMAS" }, // Snow
+            { 602, "XMAS" }, // Heavy snow
+            { 611, "XMAS" }, // Sleet
+            { 612, "XMAS" }, // Light shower sleet
+            { 613, "XMAS" }, // Shower sleet
+            { 615, "XMAS" }, // Light rain and snow
+            { 616, "XMAS" }, // Rain and snow
+            { 620, "XMAS" }, // Light shower snow
+            { 621, "XMAS" }, // Shower snow
+            { 622, "XMAS" }, // Heavy shower snow
+            // Group 7xx: Atmosphere
+            // TODO: See if there are better combinations
+            { 701, "SMOG" }, // mist
+            { 711, "SMOG" }, // Smoke
+            { 721, "SMOG" }, // Haze
+            { 731, "SMOG" }, // sand/ dust whirls
+            { 741, "SMOG" }, // fog
+            { 751, "SMOG" }, // sand
+            { 761, "SMOG" }, // dust
+            { 762, "SMOG" }, // volcanic ash	
+            { 771, "SMOG" }, // squalls
+            { 781, "SMOG" }, // tornado
+            // Group 800: Clear
+            { 800, "CLEAR" }, // clear sky
+            // Group 80x: Clouds
+            // TODO: Use LOAD_CLOUD_HAT and _SET_CLOUD_HAT_OPACITY for better cloud formations
+            { 801, "CLOUDS" }, // few clouds: 11-25%
+            { 802, "CLOUDS" }, // scattered clouds: 25-50%
+            { 803, "CLOUDS" }, // broken clouds: 51-84%
+            { 804, "CLOUDS" }, // overcast clouds: 85-100%
+        };
+        /// <summary>
         /// The current weather synchronized.
         /// </summary>
         private string currentWeather = "EXTRASUNNY";
