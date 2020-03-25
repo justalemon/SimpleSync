@@ -70,34 +70,43 @@ namespace SimpleSync.Server
         [Tick]
         public async Task UpdateTime()
         {
-            // If the game time is over or equal than the next fetch time
-            if (API.GetGameTimer() >= nextFetch)
+            // If the time is set to dynamic
+            if (Convars.TimeType == SyncType.Dynamic)
             {
-                // If the current time is 23:59
-                if (hours == 23 && minutes == 59)
+                // If the game time is over or equal than the next fetch time
+                if (API.GetGameTimer() >= nextFetch)
                 {
-                    // Set 00:00 instead of 24:00
-                    hours = 0;
-                    minutes = 0;
-                }
-                // If the current time is Something:59
-                else if (minutes == 59)
-                {
-                    // Increase the hours and set the minutes to 0
-                    hours++;
-                    minutes = 0;
-                }
-                // Otherwise
-                else
-                {
-                    // Increase the minutes
-                    minutes++;
-                }
+                    // If the current time is 23:59
+                    if (hours == 23 && minutes == 59)
+                    {
+                        // Set 00:00 instead of 24:00
+                        hours = 0;
+                        minutes = 0;
+                    }
+                    // If the current time is Something:59
+                    else if (minutes == 59)
+                    {
+                        // Increase the hours and set the minutes to 0
+                        hours++;
+                        minutes = 0;
+                    }
+                    // Otherwise
+                    else
+                    {
+                        // Increase the minutes
+                        minutes++;
+                    }
 
-                // Finally, set the next fetch time to one second in the future
-                nextFetch = API.GetGameTimer() + Convars.Scale;
-                // And send the updated time to the clients
-                TriggerClientEvent("simplesync:setTime", hours, minutes);
+                    // Finally, set the next fetch time to one second in the future
+                    nextFetch = API.GetGameTimer() + Convars.Scale;
+                    // And send the updated time to the clients
+                    TriggerClientEvent("simplesync:setTime", hours, minutes);
+                }
+            }
+            // If the time is set to static, the client already has the previous time
+            if (Convars.TimeType == SyncType.Static)
+            {
+                return;
             }
         }
 
