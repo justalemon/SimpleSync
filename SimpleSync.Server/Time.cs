@@ -95,7 +95,7 @@ namespace SimpleSync.Server
                 }
 
                 // Finally, set the next fetch time to one second in the future
-                nextFetch = API.GetGameTimer() + API.GetConvarInt("simplesync_scale", 2000);
+                nextFetch = API.GetGameTimer() + Convars.Scale;
                 // And send the updated time to the clients
                 TriggerClientEvent("simplesync:setTime", hours, minutes);
             }
