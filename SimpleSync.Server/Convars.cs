@@ -44,5 +44,17 @@ namespace SimpleSync.Server
             get => API.GetConvar("simplesync_timezone", "Pacific Standard Time");
             set => API.SetConvar("simplesync_timezone", value);
         }
+        /// <summary>
+        /// On Dynamic Weather: The time between the switch from Weather A and Weather B.
+        /// </summary>
+        public static int SwitchTime => API.GetConvarInt("simplesync_switchtime", 10000);
+        /// <summary>
+        /// On Dynamic Weather: The minimum time between one weather and the other.
+        /// </summary>
+        public static int MinSwitch => API.GetConvarInt("simplesync_switchtime", 600000); // 10 Minutes
+        /// <summary>
+        /// On Dynamic Weather: The maximum time between one weather and the other.
+        /// </summary>
+        public static int MaxSwitch => API.GetConvarInt("simplesync_switchtime", 1800000); // 30 Minutes
     }
 }
