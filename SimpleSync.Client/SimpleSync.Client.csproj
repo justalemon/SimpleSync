@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net452</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <AssemblyName>SimpleSync.Client.net</AssemblyName>
   </PropertyGroup>
 
@@ -16,7 +16,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CitizenFX.Core.Client" Version="1.0.2278" />
+    <PackageReference Include="CitizenFX.Core.Client" Version="1.0.2278">
+      <IncludeAssets>compile</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>
