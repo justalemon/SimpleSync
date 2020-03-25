@@ -1,4 +1,5 @@
 ﻿using CitizenFX.Core;
+using System;
 using System.Collections.Generic;
 
 namespace SimpleSync.Server
@@ -39,6 +40,23 @@ namespace SimpleSync.Server
 
         public Weather()
         {
+            Exports.Add("setWeather", new Action<string>(SetWeather));
+        }
+
+        #endregion
+
+        #region Exports
+
+        public void SetWeather(string weather)
+        {
+            // If the weather is on the list
+            if (validWeather.Contains(weather))
+            {
+                // Save it
+                currentWeather = weather;
+                // And send it to the clients
+                TriggerClientEvent("simplesync:setWeather", weather);
+            }
         }
 
         #endregion
