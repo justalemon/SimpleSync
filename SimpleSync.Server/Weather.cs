@@ -141,7 +141,7 @@ namespace SimpleSync.Server
                 // Save it
                 currentWeather = weather;
                 // And send it to the clients
-                TriggerClientEvent("simplesync:setWeather", weather);
+                TriggerClientEvent("simplesync:setWeather", weather, weather, 0);
             }
         }
 
@@ -156,7 +156,7 @@ namespace SimpleSync.Server
         public void RequestWeather([FromSource]Player player)
         {
             // Just tell the client to set the correct weather
-            player.TriggerEvent("simplesync:setWeather", currentWeather);
+            player.TriggerEvent("simplesync:setWeather", currentWeather, currentWeather, 0);
         }
 
         #endregion
@@ -215,7 +215,7 @@ namespace SimpleSync.Server
                         // Save the weather
                         currentWeather = openWeatherCodes[id];
                         // And send it to all of the clients
-                        TriggerClientEvent("simplesync:setWeather", currentWeather);
+                        TriggerClientEvent("simplesync:setWeather", currentWeather, currentWeather, 0);
                     }
                     // If we don't have it
                     else
@@ -270,7 +270,7 @@ namespace SimpleSync.Server
 
             // At this point, the weather is valid
             // So go ahead and set it for all of the players
-            TriggerClientEvent("simplesync:setWeather", newWeather);
+            TriggerClientEvent("simplesync:setWeather", newWeather, newWeather, 0);
             // Save it for later use
             currentWeather = newWeather;
             // And notify about it
