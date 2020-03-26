@@ -1,5 +1,6 @@
 ﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
+using SimpleSync.Shared;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -35,6 +36,11 @@ namespace SimpleSync.Server
             // Add a couple of exports to set the time
             Exports.Add("setTime", new Action<int, int>(SetTime));
             Exports.Add("setTimeZone", new Action<string>(SetTimeZone));
+            // And log a couple of messages
+            Logging.Log("Time Synchronization has started");
+            Logging.Log($"Sync Type is set to {Convars.TimeType}");
+            Logging.Log($"Scale is set to {Convars.Scale}");
+            Logging.Log($"Time Zone is set to {Convars.TimeZone}");
         }
 
         #endregion
@@ -46,6 +52,7 @@ namespace SimpleSync.Server
             // Just save the values
             hours = hour;
             minutes = minute;
+            Logging.Log($"Time set to {hour:D2}:{minute:D2} via exports");
         }
 
         public void SetTimeZone(string tz)
@@ -63,6 +70,7 @@ namespace SimpleSync.Server
 
             // If we got here, the Time Zone is valid so save it
             Convars.TimeZone = tz;
+            Logging.Log($"Time Zone set to {tz} via exports");
         }
 
         #endregion
@@ -77,6 +85,7 @@ namespace SimpleSync.Server
         {
             // Just send the up to date time
             player.TriggerEvent("simplesync:setTime", hours, minutes);
+            Logging.Log($"Client {player.Handle} ({player.Name}) requested the Time");
         }
 
         #endregion

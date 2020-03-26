@@ -1,5 +1,6 @@
 ﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
+using SimpleSync.Shared;
 using System;
 
 namespace SimpleSync.Client
@@ -15,6 +16,7 @@ namespace SimpleSync.Client
         {
             // Once this script is loaded, ask the sever for sync
             TriggerServerEvent("simplesync:requestWeather");
+            Logging.Log("Weather Synchronization has started");
         }
 
         #endregion
@@ -27,6 +29,9 @@ namespace SimpleSync.Client
         [EventHandler("simplesync:setWeather")]
         public void SetWeather(string from, string to, int duration)
         {
+            // Log what we are going to do
+            Logging.Log($"Started weather switch from {from} to {to} ({duration}s)");
+
             // Clear any overrides set
             API.ClearOverrideWeather();
             API.ClearWeatherTypePersist();

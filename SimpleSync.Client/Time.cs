@@ -1,5 +1,6 @@
 ﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
+using SimpleSync.Shared;
 using System;
 using System.Threading.Tasks;
 
@@ -29,6 +30,7 @@ namespace SimpleSync.Client
         {
             // Tell the Server to send back the correct time
             TriggerServerEvent("simplesync:requestTime");
+            Logging.Log("Time Synchronization has started");
         }
 
         #endregion
@@ -52,6 +54,7 @@ namespace SimpleSync.Client
             // Just save the values to be applied during the next tick
             hours = hour;
             minutes = minute;
+            Logging.Log($"Time set to {hour:D2}:{minute:D2}");
         }
 
         #endregion

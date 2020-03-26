@@ -126,7 +126,13 @@ namespace SimpleSync.Server
 
         public Weather()
         {
+            // Add the exports
             Exports.Add("setWeather", new Action<string>(SetWeather));
+            // And log some important commands
+            Logging.Log("Weather Synchronization has started");
+            Logging.Log($"Sync Type is set to {Convars.WeatherType}");
+            Logging.Log(string.IsNullOrWhiteSpace(Convars.OpenWeatherKey) ? "No OpenWeather API Key is set" : "An OpenWeather API Key is present");
+            Logging.Log(string.IsNullOrWhiteSpace(Convars.OpenWeatherCity) ? "No OpenWeather City is set" : $"OpenWeather City is set to {Convars.OpenWeatherCity}");
         }
 
         #endregion
@@ -142,6 +148,7 @@ namespace SimpleSync.Server
                 currentWeather = weather;
                 // And send it to the clients
                 TriggerClientEvent("simplesync:setWeather", weather, weather, 0);
+                Logging.Log($"Weather set to {weather} via exports");
             }
         }
 
@@ -157,6 +164,7 @@ namespace SimpleSync.Server
         {
             // Just tell the client to set the correct weather
             player.TriggerEvent("simplesync:setWeather", currentWeather, currentWeather, 0);
+            Logging.Log($"Client {player.Handle} ({player.Name}) requested the Weather");
         }
 
         #endregion
@@ -216,6 +224,7 @@ namespace SimpleSync.Server
                         currentWeather = openWeatherCodes[id];
                         // And send it to all of the clients
                         TriggerClientEvent("simplesync:setWeather", currentWeather, currentWeather, 0);
+                        Logging.Log($"Weather was set to {currentWeather} from OpenWeather ID {id}");
                     }
                     // If we don't have it
                     else
