@@ -23,10 +23,6 @@ namespace SimpleSync.Server
         /// </summary>
         private static readonly Random random = new Random();
         /// <summary>
-        /// The URL to fetch the up to date Weather from OpenWeather.
-        /// </summary>
-        private const string openWeatherURL = "http://api.openweathermap.org/data/2.5/weather?q={0}&appid={1}";
-        /// <summary>
         /// The next time where we should check the weather.
         /// </summary>
         private long nextFetch = 0;
@@ -252,43 +248,32 @@ namespace SimpleSync.Server
                         return;
                     }
 
-                    // Otherwise, format the correct URL
-                    string url = string.Format(openWeatherURL, Convars.OpenWeatherCity, Convars.OpenWeatherKey);
-                    // Make the request
-                    HttpResponseMessage response = await url.WithHeader("User-Agent", "SimpleSync (+https://github.com/justalemon/SimpleSync)").GetAsync();
-                    // And get the text of the response
-                    string text = await response.Content.ReadAsStringAsync();
+                    // Make the request to OpenWeatherMap
+                    WeatherData response = await OpenWeather.GetWeather();
 
-                    // If the status code is not 200
-                    if (response.StatusCode != HttpStatusCode.OK)
+                    // If the request failed
+                    if (response == null)
                     {
-                        // Show a message with the status code and content
-                        Debug.WriteLine($"OpenWeather returned code {response.StatusCode}! ({text})");
                         // Leave a 60 seconds cooldown
                         nextFetch = API.GetGameTimer() + 60000;
                         // And return
                         return;
                     }
 
-                    // Otherwise, parse the response into a JObject
-                    JObject obj = JObject.Parse(text);
-                    // And get the Weather ID
-                    int id = (int)obj["weather"][0]["id"];
-
                     // If we have a GTA V weather for that ID
-                    if (openWeatherCodes.ContainsKey(id))
+                    if (openWeatherCodes.ContainsKey(response.ID))
                     {
                         // Save the weather
-                        currentWeather = openWeatherCodes[id];
+                        currentWeather = openWeatherCodes[response.ID];
                         // And send it to all of the clients
                         TriggerClientEvent("simplesync:setWeather", currentWeather, currentWeather, 0);
-                        Logging.Log($"Weather was set to {currentWeather} from OpenWeather ID {id}");
+                        Logging.Log($"Weather was set to {currentWeather} from OpenWeather ID {response.ID}");
                     }
                     // If we don't have it
                     else
                     {
                         // Log it in the console
-                        Debug.WriteLine($"Weather ID {id} does not has a GTA V Weather!");
+                        Debug.WriteLine($"Weather ID {response.ID} does not has a GTA V Weather!");
                     }
 
                     // Finally, add a delay of 30 seconds
