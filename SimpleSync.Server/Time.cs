@@ -175,6 +175,85 @@ namespace SimpleSync.Server
         #region Commands
 
         /// <summary>
+        /// Command to Get and Set the time.
+        /// </summary>
+        [Command("time", Restricted = true)]
+        public void TimeCommand(int source, List<object> args, string raw)
+        {
+            switch (Convars.TimeType)
+            {
+                // If the sync type is set to Real, show the IRL Time
+                case SyncType.Real:
+                    DateTime tz = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, Convars.TimeZone);
+                    Debug.WriteLine($"Time Zone is set to {Convars.TimeZone}");
+                    Debug.WriteLine($"The current time is {tz.Hour:D2}:{tz.Minute:D2}");
+                    return;
+                // For Dynamic and Static
+                case SyncType.Dynamic:
+                case SyncType.Static:
+                    // If we have zero arguments, show the time and return
+                    if (args.Count == 0)
+                    {
+                        Debug.WriteLine($"The time is set to {hours:D2}:{minutes:D2}");
+                        return;
+                    }
+
+                    // If there is single argument and is separated by :
+                    if (args.Count == 1)
+                    {
+                        // Convart it to a string
+                        string repr = args[0].ToString();
+
+                        // If it contains two dots
+                        if (repr.Contains(":"))
+                        {
+                            // Convert the items and add them back
+                            string[] newArgs = repr.Split(':');
+                            args.Clear();
+                            args.AddRange(newArgs);
+                        }
+                        // If it does not, add a zero
+                        else
+                        {
+                            args.Add(0);
+                        }
+                    }
+
+                    // Now, time to parse them
+                    if (!int.TryParse(args[0].ToString(), out int newHours))
+                    {
+                        Debug.WriteLine("The first parameter is not a number.");
+                        return;
+                    }
+                    if (!int.TryParse(args[1].ToString(), out int newMinutes))
+                    {
+                        Debug.WriteLine("The second parameter is not a number.");
+                        return;
+                    }
+
+                    // If the hour is over 23 or under zero
+                    if (newHours > 23 || newHours < 0)
+                    {
+                        Debug.WriteLine("The hours can't be under 0 or over 23.");
+                        return;
+                    }
+                    // If the minutes is over 59 or under zero
+                    if (newMinutes > 59 || newMinutes < 0)
+                    {
+                        Debug.WriteLine("The minutes can't be under 0 or over 59.");
+                        return;
+                    }
+
+                    // At this point, the time is valid
+                    // Send it to everyone, save it and log it
+                    TriggerClientEvent("simplesync:setTime", newHours, newMinutes);
+                    hours = newHours;
+                    minutes = newMinutes;
+                    Debug.WriteLine($"The Time was set to {newHours:D2}:{newMinutes:D2}");
+                    break;
+            }
+        }
+        /// <summary>
         /// Command that shows the available Time Zones for the Real Time.
         /// </summary>
         [Command("timezones", Restricted = true)]
