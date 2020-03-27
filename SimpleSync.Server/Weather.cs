@@ -146,6 +146,110 @@ namespace SimpleSync.Server
 
         #endregion
 
+        #region Tools
+
+
+        /// <summary>
+        /// Gets a new weather based on the current one.
+        /// </summary>
+        /// <returns>The new weather.</returns>
+        public string NextWeather()
+        {
+            // 25% chance of keeping the same weather (0-1-2-3)
+            if (random.Next(0, 4) == 0)
+            {
+                return currentWeather;
+            }
+
+            // Otherwise, choose one that is correct based on the current one
+            if (currentWeather == "EXTRASUNNY")
+            {
+                // Extra Sunny goes to either Clear or Clearing
+                switch (random.Next(0, 2))
+                {
+                    case 0:
+                        return "CLEAR";
+                    case 1:
+                        return "CLEARING";
+                }
+            }
+            else if (currentWeather == "CLEAR" || currentWeather == "CLOUDS")
+            {
+                // This two go to Clearing or Overcast
+                switch (random.Next(0, 2))
+                {
+                    case 0:
+                        return "CLEARING";
+                    case 1:
+                        return "OVERCAST";
+                }
+            }
+            else if (currentWeather == "CLEARING" || currentWeather == "OVERCAST")
+            {
+                // Clearing and Overcast can change to Rain, Fog, Cloudy, Extra Sunny, Smog or Clear
+                switch (random.Next(0, 6))
+                {
+                    case 0:
+                        return "RAIN";
+                    case 1:
+                        return "FOGGY";
+                    case 2:
+                        return "CLOUDS";
+                    case 3:
+                        return "EXTRASUNNY";
+                    case 4:
+                        return "SMOG";
+                    case 5:
+                        return "CLEAR";
+                }
+            }
+            else if (currentWeather == "RAIN")
+            {
+                // 33% chance between Thunder, Xmas Snow and Clearing
+                switch (random.Next(0, 3))
+                {
+                    case 0:
+                        return "THUNDER";
+                    case 1:
+                        return "XMAS";
+                    case 2:
+                        return "CLEARING";
+                }
+            }
+            else if (currentWeather == "THUNDER")
+            {
+                // 50-50 chance between Rain and Clearing
+                switch (random.Next(0, 2))
+                {
+                    case 0:
+                        return "RAIN";
+                    case 1:
+                        return "CLEARING";
+                }
+            }
+            else if (currentWeather == "SMOG" || currentWeather == "FOGGY")
+            {
+                // The Smog and Fog will always be cleared
+                return "CLEARING";
+            }
+            else if (currentWeather == "XMAS")
+            {
+                // Xmas Snow will go back to Rain or Overcast
+                switch (random.Next(0, 2))
+                {
+                    case 0:
+                        return "RAIN";
+                    case 1:
+                        return "OVERCAST";
+                }
+            }
+
+            // If somehow we missed everything back there, go back to clearing
+            return "CLEARING";
+        }
+
+        #endregion
+
         #region Exports
 
         public void SetWeather(string weather)
@@ -204,19 +308,30 @@ namespace SimpleSync.Server
                 if (API.GetGameTimer() >= nextFetch)
                 {
                     // Get a random weather
-                    string newWeather = validWeather[random.Next(validWeather.Count)];
-                    // And set it for the transition
-                    transitionWeather = newWeather;
+                    string newWeather = NextWeather();
 
-                    // Tell the clients to apply the new weather
-                    TriggerClientEvent("simplesync:setWeather", currentWeather, transitionWeather, Convars.SwitchTime);
+                    // If the weather is not the same as the current one
+                    if (currentWeather != newWeather)
+                    {
+                        // Set it for the transition
+                        transitionWeather = newWeather;
+                        // Tell the clients to apply the new weather
+                        TriggerClientEvent("simplesync:setWeather", currentWeather, transitionWeather, Convars.SwitchTime);
+                        // And save the transition time
+                        transitionFinish = API.GetGameTimer() + Convars.SwitchTime;
 
-                    // Finally, save the times for the end of the transition and next fetch
-                    transitionFinish = API.GetGameTimer() + Convars.SwitchTime;
+                        Logging.Log($"Weather was dynamically changed to {newWeather} (from {currentWeather})");
+                        Logging.Log($"The transition will finish on {transitionFinish}");
+                    }
+                    // Otherwise
+                    else
+                    {
+                        Logging.Log($"The weather will stay the same as before ({newWeather})");
+                    }
+
+                    // Then, save the time for the next fetch
                     nextFetch = API.GetGameTimer() + random.Next(Convars.MinSwitch, Convars.MaxSwitch);
 
-                    Logging.Log($"Weather was dynamically changed to {newWeather} (from {currentWeather})");
-                    Logging.Log($"The transition will finish on {transitionFinish}");
                     Logging.Log($"The next weather will be fetched on {nextFetch}");
                     return;
                 }
