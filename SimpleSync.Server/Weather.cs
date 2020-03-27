@@ -2,6 +2,7 @@
 using CitizenFX.Core.Native;
 using Flurl.Http;
 using Newtonsoft.Json.Linq;
+using SimpleSync.Shared;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -17,6 +18,10 @@ namespace SimpleSync.Server
     {
         #region Fields
 
+        /// <summary>
+        /// The RNG thingy.
+        /// </summary>
+        private static readonly Random random = new Random();
         /// <summary>
         /// The URL to fetch the up to date Weather from OpenWeather.
         /// </summary>
@@ -116,9 +121,17 @@ namespace SimpleSync.Server
             { 804, "CLOUDS" }, // overcast clouds: 85-100%
         };
         /// <summary>
-        /// The current weather synchronized.
+        /// The current weather.
         /// </summary>
         private string currentWeather = "EXTRASUNNY";
+        /// <summary>
+        /// The weather that we are going to use.
+        /// </summary>
+        private string transitionWeather = "EXTRASUNNY";
+        /// <summary>
+        /// The time where the transition between the weather.
+        /// </summary>
+        private long transitionFinish = 0;
 
         #endregion
 
@@ -162,9 +175,20 @@ namespace SimpleSync.Server
         [EventHandler("simplesync:requestWeather")]
         public void RequestWeather([FromSource]Player player)
         {
-            // Just tell the client to set the correct weather
-            player.TriggerEvent("simplesync:setWeather", currentWeather, currentWeather, 0);
             Logging.Log($"Client {player.Handle} ({player.Name}) requested the Weather");
+
+            switch (Convars.WeatherType)
+            {
+                // If Dynamic weather is enabled
+                case SyncType.Dynamic:
+                    player.TriggerEvent("simplesync:setWeather", currentWeather, transitionWeather, API.GetGameTimer() - transitionFinish);
+                    return;
+                // If the weather is set to Static or Real
+                case SyncType.Static:
+                case SyncType.Real:
+                    player.TriggerEvent("simplesync:setWeather", currentWeather, currentWeather, 0);
+                    return;
+            }
         }
 
         #endregion
@@ -177,8 +201,42 @@ namespace SimpleSync.Server
         [Tick]
         public async Task UpdateWeather()
         {
+            // If the Weather is set to Dynamic
+            if (Convars.WeatherType == SyncType.Dynamic)
+            {
+                // If the game time is over or equal than the next update/fetch time
+                if (API.GetGameTimer() >= nextFetch)
+                {
+                    // Get a random weather
+                    string newWeather = validWeather[random.Next(validWeather.Count)];
+                    // And set it for the transition
+                    transitionWeather = newWeather;
+
+                    // Tell the clients to apply the new weather
+                    TriggerClientEvent("simplesync:setWeather", currentWeather, transitionWeather, Convars.SwitchTime);
+
+                    // Finally, save the times for the end of the transition and next fetch
+                    transitionFinish = API.GetGameTimer() + Convars.SwitchTime;
+                    nextFetch = API.GetGameTimer() + random.Next(Convars.MinSwitch, Convars.MaxSwitch);
+
+                    Logging.Log($"Weather was dynamically changed to {newWeather} (from {currentWeather})");
+                    Logging.Log($"The transition will finish on {transitionFinish}");
+                    Logging.Log($"The next weather will be fetched on {nextFetch}");
+                    return;
+                }
+                // If the game time is over or equal than the end of the transition and two weather do not match
+                else if (API.GetGameTimer() >= transitionFinish && currentWeather != transitionWeather)
+                {
+                    Logging.Log($"Transition from {currentWeather} to {transitionWeather} was finished");
+                    Logging.Log($"Setting transition weather as current and resetting time");
+                    // Set the transition weather as the current weather
+                    currentWeather = transitionWeather;
+                    // And set the transition time to zero
+                    transitionFinish = 0;
+                }
+            }
             // If the Weather is set to Real
-            if (Convars.WeatherType == SyncType.Real)
+            else if (Convars.WeatherType == SyncType.Real)
             {
                 // If the game time is over or equal than the next fetch time
                 if (API.GetGameTimer() >= nextFetch)
