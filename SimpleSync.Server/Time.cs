@@ -302,6 +302,14 @@ namespace SimpleSync.Server
             // And notify it
             Debug.WriteLine($"The Time Zone was set to {timeZone}!");
         }
+        /// <summary>
+        /// Shows the current internal time of the game.
+        /// </summary>
+        [Command("gametimer", Restricted = true)]
+        public void GameTimerCommand()
+        {
+            Debug.WriteLine($"Current Game Time is {API.GetGameTimer()}");
+        }
 
         #endregion
     }
