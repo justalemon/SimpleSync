@@ -51,10 +51,10 @@ namespace SimpleSync.Server
         /// <summary>
         /// On Dynamic Weather: The minimum time between one weather and the other.
         /// </summary>
-        public static int MinSwitch => API.GetConvarInt("simplesync_switchtime", 600000); // 10 Minutes
+        public static int MinSwitch => API.GetConvarInt("simplesync_switchmin", 600000); // 10 Minutes
         /// <summary>
         /// On Dynamic Weather: The maximum time between one weather and the other.
         /// </summary>
-        public static int MaxSwitch => API.GetConvarInt("simplesync_switchtime", 1800000); // 30 Minutes
+        public static int MaxSwitch => API.GetConvarInt("simplesync_switchmax", 1800000); // 30 Minutes
     }
 }
