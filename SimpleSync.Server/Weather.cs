@@ -426,6 +426,13 @@ namespace SimpleSync.Server
                 return;
             }
 
+            // If weather is set to dynamic and there is a switch in progress, return
+            if (Convars.WeatherType == SyncType.Dynamic && transitionFinish != 0)
+            {
+                Debug.WriteLine($"Weather can't be changed when there is a transition in progress");
+                return;
+            }
+
             // If the weather is not on the list
             if (!validWeather.Contains(newWeather))
             {
