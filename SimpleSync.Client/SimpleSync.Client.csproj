@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CitizenFX.Core.Client" Version="1.0.2303">
+    <PackageReference Include="CitizenFX.Core.Client" Version="1.0.2305">
       <IncludeAssets>compile</IncludeAssets>
     </PackageReference>
     <Compile Include="../Logging.cs" />
