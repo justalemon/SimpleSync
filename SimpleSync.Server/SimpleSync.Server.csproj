@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CitizenFX.Core.Server" Version="1.0.2303">
+    <PackageReference Include="CitizenFX.Core.Server" Version="1.0.2306">
       <IncludeAssets>compile</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Flurl.Http" Version="2.4.2" />
