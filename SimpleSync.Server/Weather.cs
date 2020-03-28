@@ -137,6 +137,8 @@ namespace SimpleSync.Server
         {
             // Add the exports
             Exports.Add("setWeather", new Action<string>(SetWeather));
+            Exports.Add("getWeatherNextFetch", new Action<string>(SetWeather));
+            Exports.Add("getWeatherSyncType", new Func<int>(() => API.GetConvarInt("simplesync_typeweather", 0)));
             // And log some important commands
             Logging.Log("Weather Synchronization has started");
             Logging.Log($"Sync Type is set to {Convars.WeatherType}");
@@ -147,7 +149,6 @@ namespace SimpleSync.Server
         #endregion
 
         #region Tools
-
 
         /// <summary>
         /// Gets a new weather based on the current one.
