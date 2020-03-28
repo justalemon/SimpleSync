@@ -420,6 +420,13 @@ namespace SimpleSync.Server
                 return;
             }
 
+            // If we have OpenWeather synchronization enabled, the weather can't be changed
+            if (Convars.WeatherType == SyncType.Real)
+            {
+                Debug.WriteLine("The weather can't be changed if OpenWeatherMap is enabled");
+                return;
+            }
+
             // Convert the first parameter to upper case
             string newWeather = args[0].ToString().ToUpperInvariant();
 
