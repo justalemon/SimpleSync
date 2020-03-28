@@ -104,31 +104,18 @@ namespace SimpleSync.Server
                 // If the game time is over or equal than the next fetch time
                 if (API.GetGameTimer() >= nextFetch)
                 {
-                    // If the current time is 23:59
-                    if (hours == 23 && minutes == 59)
-                    {
-                        // Set 00:00 instead of 24:00
-                        hours = 0;
-                        minutes = 0;
-                    }
-                    // If the current time is Something:59
-                    else if (minutes == 59)
-                    {
-                        // Increase the hours and set the minutes to 0
-                        hours++;
-                        minutes = 0;
-                    }
-                    // Otherwise
-                    else
-                    {
-                        // Increase the minutes
-                        minutes++;
-                    }
-
-                    // Finally, set the next fetch time to one second in the future
+                    // Calculate the total number of minutes plus the total that we need
+                    float totalMinutes = (hours * 60) + minutes + Convars.Increase;
+                    // And feed it into a timespan
+                    TimeSpan parsed = TimeSpan.FromMinutes(totalMinutes);
+                    // Save the hours and minutes
+                    hours = parsed.Hours;
+                    minutes = parsed.Minutes;
+                    // Set the next fetch time to the specified scale
                     nextFetch = API.GetGameTimer() + Convars.Scale;
                     // And send the updated time to the clients
                     TriggerClientEvent("simplesync:setTime", hours, minutes);
+                    Logging.Log($"Time bumped to {hours:D2}:{minutes:D2}");
                 }
             }
             // If the time is set to static, the client already has the previous time
