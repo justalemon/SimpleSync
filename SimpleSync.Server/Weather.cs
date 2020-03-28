@@ -247,18 +247,6 @@ namespace SimpleSync.Server
             // If somehow we missed everything back there, go back to clearing
             return "CLEARING";
         }
-        public void SwitchTo(string weather)
-        {
-            // Set it for the transition
-            transitionWeather = weather;
-            // Tell the clients to apply the new weather
-            TriggerClientEvent("simplesync:setWeather", currentWeather, transitionWeather, Convars.SwitchTime);
-            // And save the transition time
-            transitionFinish = API.GetGameTimer() + Convars.SwitchTime;
-
-            Logging.Log($"Weather was dynamically changed to {weather} (from {currentWeather})");
-            Logging.Log($"The transition will finish on {transitionFinish}");
-        }
 
         #endregion
 
@@ -322,11 +310,18 @@ namespace SimpleSync.Server
                     // Get a random weather
                     string newWeather = NextWeather();
 
-                    // If the weather is not the same as the current one, switch to it
+                    // If the weather is not the same as the current one
                     if (currentWeather != newWeather)
                     {
-                        SwitchTo(newWeather);
-                        return;
+                        // Set it for the transition
+                        transitionWeather = newWeather;
+                        // Tell the clients to apply the new weather
+                        TriggerClientEvent("simplesync:setWeather", currentWeather, transitionWeather, Convars.SwitchTime);
+                        // And save the transition time
+                        transitionFinish = API.GetGameTimer() + Convars.SwitchTime;
+
+                        Logging.Log($"Weather was dynamically changed to {newWeather} (from {currentWeather})");
+                        Logging.Log($"The transition will finish on {transitionFinish}");
                     }
                     // Otherwise
                     else
@@ -454,22 +449,13 @@ namespace SimpleSync.Server
                 return;
             }
 
-            // If this is dynamic weather
-            if (Convars.WeatherType == SyncType.Dynamic)
-            {
-                // Switch to it
-                SwitchTo(newWeather);
-            }
-            // Otherwise
-            else
-            {
-                // Send it to everyone
-                TriggerClientEvent("simplesync:setWeather", newWeather, newWeather, 0);
-                // Save it for later use
-                currentWeather = newWeather;
-                // And notify the change
-                Debug.WriteLine($"The weather was set to {newWeather}");
-            }
+            // At this point, the weather is valid
+            // So go ahead and set it for all of the players
+            TriggerClientEvent("simplesync:setWeather", newWeather, newWeather, 0);
+            // Save it for later use
+            currentWeather = newWeather;
+            // And notify about it
+            Debug.WriteLine($"The weather was set to {newWeather}");
         }
 
         #endregion
