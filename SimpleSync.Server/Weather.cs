@@ -164,13 +164,13 @@ namespace SimpleSync.Server
             // Otherwise, choose one that is correct based on the current one
             if (currentWeather == "EXTRASUNNY")
             {
-                // Extra Sunny goes to either Clear or Clearing
+                // Extra Sunny goes to either Clear or Clouds
                 switch (random.Next(0, 2))
                 {
                     case 0:
                         return "CLEAR";
                     case 1:
-                        return "CLEARING";
+                        return "CLOUDS";
                 }
             }
             else if (currentWeather == "CLEAR" || currentWeather == "CLOUDS")
