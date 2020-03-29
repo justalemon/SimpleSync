@@ -51,7 +51,7 @@ namespace SimpleSync.Server
         /// <summary>
         /// On Dynamic Weather: The time between the switch from Weather A and Weather B.
         /// </summary>
-        public static int SwitchTime => API.GetConvarInt("simplesync_switchtime", 10000);
+        public static int Transition => API.GetConvarInt("simplesync_transition", 10000);
         /// <summary>
         /// On Dynamic Weather: The minimum time between one weather and the other.
         /// </summary>
