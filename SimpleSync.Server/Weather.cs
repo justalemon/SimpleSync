@@ -132,9 +132,11 @@ namespace SimpleSync.Server
         public Weather()
         {
             // Add the exports
+            Exports.Add("getWeatherSyncMode", new Func<int>(() => API.GetConvarInt("simplesync_modeweather", 0)));
+            Exports.Add("setTimeSyncMode", new Func<int, bool>(SetSyncMode));
+
             Exports.Add("setWeather", new Func<string, bool>(SetWeather));
             Exports.Add("getNextWeatherFetch", new Func<long>(() => nextFetch));
-            Exports.Add("getWeatherSyncMode", new Func<int>(() => API.GetConvarInt("simplesync_modeweather", 0)));
             // And log some important commands
             Logging.Log("Weather Synchronization has started");
             Logging.Log($"Sync Mode is set to {Convars.WeatherMode}");
@@ -248,6 +250,20 @@ namespace SimpleSync.Server
         #endregion
 
         #region Exports
+
+        public bool SetSyncMode(int mode)
+        {
+            // If is not defined on the enum, return
+            if (!Enum.IsDefined(typeof(SyncMode), mode))
+            {
+                return false;
+            }
+            // Otherwise, save the value
+            API.SetConvar("simplesync_modeweather", mode.ToString());
+            // And reset the fetch time
+            nextFetch = 0;
+            return true;
+        }
 
         public bool SetWeather(string weather)
         {
