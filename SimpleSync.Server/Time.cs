@@ -53,10 +53,14 @@ namespace SimpleSync.Server
 
         public void SetTime(int hour, int minute)
         {
-            // Just save the values
-            hours = hour;
-            minutes = minute;
-            Logging.Log($"Time set to {hour:D2}:{minute:D2} via exports");
+            // Feed it into a timespan
+            TimeSpan parsed = TimeSpan.FromMinutes((hour * 60) + minute);
+            // Save the individual values
+            hours = parsed.Hours;
+            minutes = parsed.Minutes;
+            // And send the updated time to the clients
+            TriggerClientEvent("simplesync:setTime", hours, minutes);
+            Logging.Log($"Time set to {hours:D2}:{minutes:D2} via SetTime");
         }
 
         public void SetTimeZone(string tz)
@@ -108,17 +112,12 @@ namespace SimpleSync.Server
                 // If the game time is over or equal than the next fetch time
                 if (API.GetGameTimer() >= nextFetch)
                 {
-                    // Calculate the total number of minutes plus the total that we need
-                    float totalMinutes = (hours * 60) + minutes + Convars.Increase;
-                    // And feed it into a timespan
-                    TimeSpan parsed = TimeSpan.FromMinutes(totalMinutes);
-                    // Save the hours and minutes
-                    hours = parsed.Hours;
-                    minutes = parsed.Minutes;
+                    // Calculate the total number of minutes plus the increase
+                    int total = (hours * 60) + minutes + Convars.Increase;
+                    // Tell the system to set this specific number of minutes
+                    SetTime(0, total);
                     // Set the next fetch time to the specified scale
                     nextFetch = API.GetGameTimer() + Convars.Scale;
-                    // And send the updated time to the clients
-                    TriggerClientEvent("simplesync:setTime", hours, minutes);
                     Logging.Log($"Time bumped to {hours:D2}:{minutes:D2}");
                 }
             }
@@ -150,13 +149,10 @@ namespace SimpleSync.Server
                         return;
                     }
 
-                    // If no errors happened, save the hours and minutes
-                    hours = dateTime.Hour;
-                    minutes = dateTime.Minute;
-                    // Set the next fetch time to one second in the future
+                    // If no errors happened, set the correct time
+                    SetTime(dateTime.Hour, dateTime.Minute);
+                    // And set the next fetch time to one second in the future
                     nextFetch = API.GetGameTimer() + 1000;
-                    // And send it to all of the clients
-                    TriggerClientEvent("simplesync:setTime", hours, minutes);
                 }
             }
         }
@@ -222,25 +218,8 @@ namespace SimpleSync.Server
                         return;
                     }
 
-                    // If the hour is over 23 or under zero
-                    if (newHours > 23 || newHours < 0)
-                    {
-                        Debug.WriteLine("The hours can't be under 0 or over 23.");
-                        return;
-                    }
-                    // If the minutes is over 59 or under zero
-                    if (newMinutes > 59 || newMinutes < 0)
-                    {
-                        Debug.WriteLine("The minutes can't be under 0 or over 59.");
-                        return;
-                    }
-
-                    // At this point, the time is valid
-                    // Send it to everyone, save it and log it
-                    TriggerClientEvent("simplesync:setTime", newHours, newMinutes);
-                    hours = newHours;
-                    minutes = newMinutes;
-                    Debug.WriteLine($"The Time was set to {newHours:D2}:{newMinutes:D2}");
+                    // If we got here, the numbers are valid
+                    SetTime(newHours, newMinutes);
                     break;
             }
         }
