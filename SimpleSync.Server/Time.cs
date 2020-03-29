@@ -293,6 +293,35 @@ namespace SimpleSync.Server
         {
             Debug.WriteLine($"Current Game Time is {API.GetGameTimer()}");
         }
+        /// <summary>
+        /// Command to Get and Set the sync type.
+        /// </summary>
+        [Command("timesync", Restricted = true)]
+        public void TimeSyncCommand(int source, List<object> args, string raw)
+        {
+            // If there is more than one argument
+            if (args.Count >= 1)
+            {
+                // Try to parse the first argument and save it
+                if (int.TryParse(args[0].ToString(), out int output))
+                {
+                    if (!SetSyncType(output))
+                    {
+                        Debug.WriteLine($"{output} is not a valid synchronization mode!");
+                        return;
+                    }
+                }
+                // If is not, tell the user
+                else
+                {
+                    Debug.WriteLine("The value specified is not a valid number.");
+                    return;
+                }
+            }
+
+            // Say the current synchronization type
+            Debug.WriteLine($"The Time sync mode is set to {Convars.TimeType}");
+        }
 
         #endregion
     }
