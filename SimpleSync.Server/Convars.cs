@@ -12,7 +12,7 @@ namespace SimpleSync.Server
         /// </summary>
         public static SyncType TimeType
         {
-            get => (SyncType)API.GetConvarInt("simplesync_typetime", 0);
+            get => (SyncType)API.GetConvarInt("simplesync_modetime", 0);
             set => API.SetConvar("simplesync_typetime", ((int)value).ToString());
         }
         /// <summary>
@@ -20,7 +20,7 @@ namespace SimpleSync.Server
         /// </summary>
         public static SyncType WeatherType
         {
-            get => (SyncType)API.GetConvarInt("simplesync_typeweather", 0);
+            get => (SyncType)API.GetConvarInt("simplesync_modeweather", 0);
             set => API.SetConvar("simplesync_typeweather", ((int)value).ToString());
         }
 
@@ -35,11 +35,11 @@ namespace SimpleSync.Server
         /// <summary>
         /// The OpenWeatherMap API Key.
         /// </summary>
-        public static string OpenWeatherKey => API.GetConvar("simplesync_openweatherkey", "");
+        public static string OpenWeatherKey => API.GetConvar("simplesync_key", "");
         /// <summary>
         /// The city to query from OpenWeatherMap.
         /// </summary>
-        public static string OpenWeatherCity => API.GetConvar("simplesync_openweathercity", "");
+        public static string OpenWeatherCity => API.GetConvar("simplesync_city", "");
         /// <summary>
         /// On Real Time: The time zone to fetch the up to date time.
         /// </summary>
