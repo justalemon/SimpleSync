@@ -36,6 +36,7 @@ namespace SimpleSync.Server
             // Add a couple of exports to set the time
             Exports.Add("setTime", new Action<int, int>(SetTime));
             Exports.Add("setTimeZone", new Func<string, bool>(SetTimeZone));
+            Exports.Add("getTimeZone", new Func<string>(() => Convars.TimeZone));
             Exports.Add("getHours", new Func<int>(() => hours));
             Exports.Add("getMinutes", new Func<int>(() => minutes));
             Exports.Add("getNextTimeFetch", new Func<long>(() => nextFetch));
