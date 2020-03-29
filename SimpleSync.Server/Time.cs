@@ -253,25 +253,18 @@ namespace SimpleSync.Server
             }
 
             // Get the timezone as a string
-            string timeZone = args[0].ToString();
-            // Try to get the timezone with the specified name
-            try
+            string tz = args[0].ToString();
+            // And try to set it and send a confirmation message
+            if (SetTimeZone(tz))
             {
-                TimeZoneInfo.FindSystemTimeZoneById(timeZone);
+                Debug.WriteLine($"The Time Zone was set to {tz}!");
             }
-            // If the timezone was not found, notify it and return
-            catch (TimeZoneNotFoundException)
+            else
             {
-                Debug.WriteLine($"The Time Zone {timeZone} does not exists!");
+                Debug.WriteLine($"The Time Zone {tz} does not exists!");
                 Debug.WriteLine("Remember that the Time Zone IDs are case sensitive");
                 Debug.WriteLine("Use the /timezones command to show all of the TZs");
-                return;
             }
-
-            // If we got here, the Time Zone is valid so save it
-            Convars.TimeZone = timeZone;
-            // And notify it
-            Debug.WriteLine($"The Time Zone was set to {timeZone}!");
         }
         /// <summary>
         /// Shows the current internal time of the game.
