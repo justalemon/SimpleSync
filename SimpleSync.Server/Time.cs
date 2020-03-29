@@ -118,7 +118,7 @@ namespace SimpleSync.Server
                     SetTime(0, total);
                     // Set the next fetch time to the specified scale
                     nextFetch = API.GetGameTimer() + Convars.Scale;
-                    Logging.Log($"Time bumped to {hours:D2}:{minutes:D2}");
+                    Logging.Log($"Time bump complete!");
                 }
             }
             // If the time is set to static, the client already has the previous time
