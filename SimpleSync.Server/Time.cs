@@ -35,7 +35,7 @@ namespace SimpleSync.Server
         {
             // Add a couple of exports to set the time
             Exports.Add("setTime", new Action<int, int>(SetTime));
-            Exports.Add("setTimeZone", new Action<string>(SetTimeZone));
+            Exports.Add("setTimeZone", new Func<string, bool>(SetTimeZone));
             Exports.Add("getHours", new Func<int>(() => hours));
             Exports.Add("getMinutes", new Func<int>(() => minutes));
             Exports.Add("getNextTimeFetch", new Func<long>(() => nextFetch));
@@ -63,7 +63,7 @@ namespace SimpleSync.Server
             Logging.Log($"Time set to {hours:D2}:{minutes:D2} via SetTime");
         }
 
-        public void SetTimeZone(string tz)
+        public bool SetTimeZone(string tz)
         {
             // Try to get the timezone with the specified name
             try
@@ -73,12 +73,13 @@ namespace SimpleSync.Server
             // If the timezone was not found, just return
             catch (TimeZoneNotFoundException)
             {
-                return;
+                return false;
             }
 
             // If we got here, the Time Zone is valid so save it
             Convars.TimeZone = tz;
             Logging.Log($"Time Zone set to {tz} via exports");
+            return true;
         }
 
         #endregion
