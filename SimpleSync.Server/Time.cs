@@ -34,13 +34,16 @@ namespace SimpleSync.Server
         public Time()
         {
             // Add a couple of exports to set the time
+            Exports.Add("getTimeSyncType", new Func<int>(() => API.GetConvarInt("simplesync_typetime", 0)));
+
             Exports.Add("setTime", new Action<int, int>(SetTime));
-            Exports.Add("setTimeZone", new Func<string, bool>(SetTimeZone));
-            Exports.Add("getTimeZone", new Func<string>(() => Convars.TimeZone));
             Exports.Add("getHours", new Func<int>(() => hours));
             Exports.Add("getMinutes", new Func<int>(() => minutes));
+
+            Exports.Add("setTimeZone", new Func<string, bool>(SetTimeZone));
+            Exports.Add("getTimeZone", new Func<string>(() => Convars.TimeZone));
+
             Exports.Add("getNextTimeFetch", new Func<long>(() => nextFetch));
-            Exports.Add("getTimeSyncType", new Func<int>(() => API.GetConvarInt("simplesync_typetime", 0)));
             // And log a couple of messages
             Logging.Log("Time Synchronization has started");
             Logging.Log($"Sync Type is set to {Convars.TimeType}");
