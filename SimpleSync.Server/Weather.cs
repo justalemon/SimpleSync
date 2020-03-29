@@ -282,8 +282,8 @@ namespace SimpleSync.Server
             if (Convars.WeatherMode == SyncMode.Dynamic)
             {
                 transitionWeather = weather;
-                TriggerClientEvent("simplesync:setWeather", currentWeather, transitionWeather, Convars.SwitchTime);
-                transitionFinish = API.GetGameTimer() + Convars.SwitchTime;
+                TriggerClientEvent("simplesync:setWeather", currentWeather, transitionWeather, Convars.Transition);
+                transitionFinish = API.GetGameTimer() + Convars.Transition;
                 Logging.Log($"Started weather switch to {weather} (from {currentWeather})");
                 Logging.Log($"The transition will finish on {transitionFinish}");
                 return true;
