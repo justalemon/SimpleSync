@@ -135,8 +135,13 @@ namespace SimpleSync.Server
             Exports.Add("getWeatherSyncMode", new Func<int>(() => API.GetConvarInt("simplesync_modeweather", 0)));
             Exports.Add("setTimeSyncMode", new Func<int, bool>(SetSyncMode));
 
+            Exports.Add("getWeather", new Func<string>(() => currentWeather));
             Exports.Add("setWeather", new Func<string, bool>(SetWeather));
+            Exports.Add("getTransitionWeather", new Func<string>(() => transitionWeather));
+
             Exports.Add("getNextWeatherFetch", new Func<long>(() => nextFetch));
+
+            Exports.Add("getWeatherTransitionFinish", new Func<long>(() => transitionFinish));
             // And log some important commands
             Logging.Log("Weather Synchronization has started");
             Logging.Log($"Sync Mode is set to {Convars.WeatherMode}");
