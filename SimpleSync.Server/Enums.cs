@@ -1,12 +1,12 @@
 ﻿namespace SimpleSync.Server
 {
     /// <summary>
-    /// The type of Synchronization for Weather and Time.
+    /// The Synchronization Mode for Weather and Time.
     /// </summary>
-    public enum SyncType
+    public enum SyncMode
     {
         /// <summary>
-        /// Changes the Synchronization dynamically.
+        /// Changes are made dynamically.
         /// </summary>
         Dynamic = 0,
         /// <summary>
@@ -14,7 +14,7 @@
         /// </summary>
         Static = 1,
         /// <summary>
-        /// Does a synchronization with a Real city.
+        /// Synchronization is done with IRL Information.
         /// </summary>
         Real = 2,
     }

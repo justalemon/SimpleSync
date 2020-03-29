@@ -34,8 +34,8 @@ namespace SimpleSync.Server
         public Time()
         {
             // Add a couple of exports to set the time
-            Exports.Add("getTimeSyncType", new Func<int>(() => API.GetConvarInt("simplesync_typetime", 0)));
-            Exports.Add("setTimeSyncType", new Func<int, bool>(SetSyncType));
+            Exports.Add("getTimeSyncMode", new Func<int>(() => API.GetConvarInt("simplesync_modetime", 0)));
+            Exports.Add("setTimeSyncMode", new Func<int, bool>(SetSyncMode));
 
             Exports.Add("setTime", new Action<int, int>(SetTime));
             Exports.Add("getHours", new Func<int>(() => hours));
@@ -47,7 +47,7 @@ namespace SimpleSync.Server
             Exports.Add("getNextTimeFetch", new Func<long>(() => nextFetch));
             // And log a couple of messages
             Logging.Log("Time Synchronization has started");
-            Logging.Log($"Sync Type is set to {Convars.TimeType}");
+            Logging.Log($"Sync Mode is set to {Convars.TimeMode}");
             Logging.Log($"Scale is set to {Convars.Scale}");
             Logging.Log($"Time Zone is set to {Convars.TimeZone}");
         }
@@ -56,15 +56,15 @@ namespace SimpleSync.Server
 
         #region Exports
 
-        public bool SetSyncType(int type)
+        public bool SetSyncMode(int mode)
         {
             // If is not defined on the enum, return
-            if (!Enum.IsDefined(typeof(SyncType), type))
+            if (!Enum.IsDefined(typeof(SyncMode), mode))
             {
                 return false;
             }
             // Otherwise, save the value
-            API.SetConvar("simplesync_typetime", type.ToString());
+            API.SetConvar("simplesync_modetime", mode.ToString());
             // And reset the fetch time
             nextFetch = 0;            
             return true;
@@ -127,7 +127,7 @@ namespace SimpleSync.Server
         public async Task UpdateTime()
         {
             // If the time is set to dynamic
-            if (Convars.TimeType == SyncType.Dynamic)
+            if (Convars.TimeMode == SyncMode.Dynamic)
             {
                 // If the game time is over or equal than the next fetch time
                 if (API.GetGameTimer() >= nextFetch)
@@ -142,12 +142,12 @@ namespace SimpleSync.Server
                 }
             }
             // If the time is set to static, the client already has the previous time
-            else if (Convars.TimeType == SyncType.Static)
+            else if (Convars.TimeMode == SyncMode.Static)
             {
                 return;
             }
             // If the time is set to real
-            else if (Convars.TimeType == SyncType.Real)
+            else if (Convars.TimeMode == SyncMode.Real)
             {
                 // If the game time is over or equal than the next fetch time
                 if (API.GetGameTimer() >= nextFetch)
@@ -187,17 +187,17 @@ namespace SimpleSync.Server
         [Command("time", Restricted = true)]
         public void TimeCommand(int source, List<object> args, string raw)
         {
-            switch (Convars.TimeType)
+            switch (Convars.TimeMode)
             {
-                // If the sync type is set to Real, show the IRL Time
-                case SyncType.Real:
+                // If the sync mode is set to Real, show the IRL Time
+                case SyncMode.Real:
                     DateTime tz = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, Convars.TimeZone);
                     Debug.WriteLine($"Time Zone is set to {Convars.TimeZone}");
                     Debug.WriteLine($"The current time is {tz.Hour:D2}:{tz.Minute:D2}");
                     return;
                 // For Dynamic and Static
-                case SyncType.Dynamic:
-                case SyncType.Static:
+                case SyncMode.Dynamic:
+                case SyncMode.Static:
                     // If we have zero arguments, show the time and return
                     if (args.Count == 0)
                     {
@@ -294,7 +294,7 @@ namespace SimpleSync.Server
             Debug.WriteLine($"Current Game Time is {API.GetGameTimer()}");
         }
         /// <summary>
-        /// Command to Get and Set the sync type.
+        /// Command to Get and Set the sync mode.
         /// </summary>
         [Command("timesync", Restricted = true)]
         public void TimeSyncCommand(int source, List<object> args, string raw)
@@ -305,7 +305,7 @@ namespace SimpleSync.Server
                 // Try to parse the first argument and save it
                 if (int.TryParse(args[0].ToString(), out int output))
                 {
-                    if (!SetSyncType(output))
+                    if (!SetSyncMode(output))
                     {
                         Debug.WriteLine($"{output} is not a valid synchronization mode!");
                         return;
@@ -319,8 +319,8 @@ namespace SimpleSync.Server
                 }
             }
 
-            // Say the current synchronization type
-            Debug.WriteLine($"The Time sync mode is set to {Convars.TimeType}");
+            // Say the current synchronization mode
+            Debug.WriteLine($"The Time sync mode is set to {Convars.TimeMode}");
         }
 
         #endregion

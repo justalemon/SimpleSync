@@ -8,20 +8,20 @@ namespace SimpleSync.Server
     public static class Convars
     {
         /// <summary>
-        /// The current Sync type for the Time.
+        /// The current Sync mode for the Time.
         /// </summary>
-        public static SyncType TimeType
+        public static SyncMode TimeMode
         {
-            get => (SyncType)API.GetConvarInt("simplesync_modetime", 0);
-            set => API.SetConvar("simplesync_typetime", ((int)value).ToString());
+            get => (SyncMode)API.GetConvarInt("simplesync_modetime", 0);
+            set => API.SetConvar("simplesync_modetime", ((int)value).ToString());
         }
         /// <summary>
-        /// The current Sync type for the Weather.
+        /// The current Sync mode for the Weather.
         /// </summary>
-        public static SyncType WeatherType
+        public static SyncMode WeatherMode
         {
-            get => (SyncType)API.GetConvarInt("simplesync_modeweather", 0);
-            set => API.SetConvar("simplesync_typeweather", ((int)value).ToString());
+            get => (SyncMode)API.GetConvarInt("simplesync_modeweather", 0);
+            set => API.SetConvar("simplesync_modeweather", ((int)value).ToString());
         }
 
         /// <summary>

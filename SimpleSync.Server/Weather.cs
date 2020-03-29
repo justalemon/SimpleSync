@@ -1,12 +1,8 @@
 ﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
-using Flurl.Http;
-using Newtonsoft.Json.Linq;
 using SimpleSync.Shared;
 using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace SimpleSync.Server
@@ -138,10 +134,10 @@ namespace SimpleSync.Server
             // Add the exports
             Exports.Add("setWeather", new Action<string>(SetWeather));
             Exports.Add("getNextWeatherFetch", new Func<long>(() => nextFetch));
-            Exports.Add("getWeatherSyncType", new Func<int>(() => API.GetConvarInt("simplesync_typeweather", 0)));
+            Exports.Add("getWeatherSyncMode", new Func<int>(() => API.GetConvarInt("simplesync_modeweather", 0)));
             // And log some important commands
             Logging.Log("Weather Synchronization has started");
-            Logging.Log($"Sync Type is set to {Convars.WeatherType}");
+            Logging.Log($"Sync Mode is set to {Convars.WeatherMode}");
             Logging.Log(string.IsNullOrWhiteSpace(Convars.OpenWeatherKey) ? "No OpenWeather API Key is set" : "An OpenWeather API Key is present");
             Logging.Log(string.IsNullOrWhiteSpace(Convars.OpenWeatherCity) ? "No OpenWeather City is set" : $"OpenWeather City is set to {Convars.OpenWeatherCity}");
         }
@@ -255,8 +251,8 @@ namespace SimpleSync.Server
 
         public void SetWeather(string weather)
         {
-            // If the weather is on the list and the Weather Type is not set to Real
-            if (validWeather.Contains(weather) && Convars.WeatherType != SyncType.Real)
+            // If the weather is on the list and the Weather Mode is not set to Real
+            if (validWeather.Contains(weather) && Convars.WeatherMode != SyncMode.Real)
             {
                 // Save it
                 currentWeather = weather;
@@ -278,15 +274,15 @@ namespace SimpleSync.Server
         {
             Logging.Log($"Client {player.Handle} ({player.Name}) requested the Weather");
 
-            switch (Convars.WeatherType)
+            switch (Convars.WeatherMode)
             {
                 // If Dynamic weather is enabled
-                case SyncType.Dynamic:
+                case SyncMode.Dynamic:
                     player.TriggerEvent("simplesync:setWeather", currentWeather, transitionWeather, API.GetGameTimer() - transitionFinish);
                     return;
                 // If the weather is set to Static or Real
-                case SyncType.Static:
-                case SyncType.Real:
+                case SyncMode.Static:
+                case SyncMode.Real:
                     player.TriggerEvent("simplesync:setWeather", currentWeather, currentWeather, 0);
                     return;
             }
@@ -303,7 +299,7 @@ namespace SimpleSync.Server
         public async Task UpdateWeather()
         {
             // If the Weather is set to Dynamic
-            if (Convars.WeatherType == SyncType.Dynamic)
+            if (Convars.WeatherMode == SyncMode.Dynamic)
             {
                 // If the game time is over or equal than the next update/fetch time
                 if (API.GetGameTimer() >= nextFetch)
@@ -348,7 +344,7 @@ namespace SimpleSync.Server
                 }
             }
             // If the Weather is set to Real
-            else if (Convars.WeatherType == SyncType.Real)
+            else if (Convars.WeatherMode == SyncMode.Real)
             {
                 // If the game time is over or equal than the next fetch time
                 if (API.GetGameTimer() >= nextFetch)
@@ -417,7 +413,7 @@ namespace SimpleSync.Server
             }
 
             // If we have OpenWeather synchronization enabled, the weather can't be changed
-            if (Convars.WeatherType == SyncType.Real)
+            if (Convars.WeatherMode == SyncMode.Real)
             {
                 Debug.WriteLine("The weather can't be changed if OpenWeatherMap is enabled");
                 return;
@@ -435,7 +431,7 @@ namespace SimpleSync.Server
             }
 
             // If weather is set to dynamic and there is a switch in progress, return
-            if (Convars.WeatherType == SyncType.Dynamic && transitionFinish != 0)
+            if (Convars.WeatherMode == SyncMode.Dynamic && transitionFinish != 0)
             {
                 Debug.WriteLine($"Weather can't be changed when there is a transition in progress");
                 return;
