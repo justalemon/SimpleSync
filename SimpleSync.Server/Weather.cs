@@ -262,7 +262,9 @@ namespace SimpleSync.Server
             {
                 transitionWeather = weather;
                 TriggerClientEvent("simplesync:setWeather", currentWeather, transitionWeather, Convars.SwitchTime);
-                Logging.Log($"Started weather switch to {weather}");
+                transitionFinish = API.GetGameTimer() + Convars.SwitchTime;
+                Logging.Log($"Started weather switch to {weather} (from {currentWeather})");
+                Logging.Log($"The transition will finish on {transitionFinish}");
                 return true;
             }
             // If the static mode is being used, send it instantly
@@ -327,9 +329,6 @@ namespace SimpleSync.Server
                     if (currentWeather != newWeather)
                     {
                         SetWeather(newWeather);
-                        transitionFinish = API.GetGameTimer() + Convars.SwitchTime;
-                        Logging.Log($"Current weather is {currentWeather}");
-                        Logging.Log($"The transition will finish on {transitionFinish}");
                     }
                     // Otherwise, don't do a switch
                     else
