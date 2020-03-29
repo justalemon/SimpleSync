@@ -35,6 +35,7 @@ namespace SimpleSync.Server
         {
             // Add a couple of exports to set the time
             Exports.Add("getTimeSyncType", new Func<int>(() => API.GetConvarInt("simplesync_typetime", 0)));
+            Exports.Add("setTimeSyncType", new Func<int, bool>(SetSyncType));
 
             Exports.Add("setTime", new Action<int, int>(SetTime));
             Exports.Add("getHours", new Func<int>(() => hours));
@@ -54,6 +55,20 @@ namespace SimpleSync.Server
         #endregion
 
         #region Exports
+
+        public bool SetSyncType(int type)
+        {
+            // If is not defined on the enum, return
+            if (!Enum.IsDefined(typeof(SyncType), type))
+            {
+                return false;
+            }
+            // Otherwise, save the value
+            API.SetConvar("simplesync_typetime", type.ToString());
+            // And reset the fetch time
+            nextFetch = 0;            
+            return true;
+        }
 
         public void SetTime(int hour, int minute)
         {
