@@ -323,20 +323,15 @@ namespace SimpleSync.Server
                     // Get a random weather
                     string newWeather = NextWeather();
 
-                    // If the weather is not the same as the current one
+                    // If the weather is not the same as the current one, switch to it
                     if (currentWeather != newWeather)
                     {
-                        // Set it for the transition
-                        transitionWeather = newWeather;
-                        // Tell the clients to apply the new weather
-                        TriggerClientEvent("simplesync:setWeather", currentWeather, transitionWeather, Convars.SwitchTime);
-                        // And save the transition time
+                        SetWeather(newWeather);
                         transitionFinish = API.GetGameTimer() + Convars.SwitchTime;
-
-                        Logging.Log($"Weather was dynamically changed to {newWeather} (from {currentWeather})");
+                        Logging.Log($"Current weather is {currentWeather}");
                         Logging.Log($"The transition will finish on {transitionFinish}");
                     }
-                    // Otherwise
+                    // Otherwise, don't do a switch
                     else
                     {
                         Logging.Log($"The weather will stay the same as before ({newWeather})");
@@ -464,11 +459,7 @@ namespace SimpleSync.Server
 
             // At this point, the weather is valid
             // So go ahead and set it for all of the players
-            TriggerClientEvent("simplesync:setWeather", newWeather, newWeather, 0);
-            // Save it for later use
-            currentWeather = newWeather;
-            // And notify about it
-            Debug.WriteLine($"The weather was set to {newWeather}");
+            SetWeather(newWeather);
         }
 
         #endregion
