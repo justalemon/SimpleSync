@@ -132,7 +132,7 @@ namespace SimpleSync.Server
         public Weather()
         {
             // Add the exports
-            Exports.Add("setWeather", new Action<string>(SetWeather));
+            Exports.Add("setWeather", new Func<string, bool>(SetWeather));
             Exports.Add("getNextWeatherFetch", new Func<long>(() => nextFetch));
             Exports.Add("getWeatherSyncMode", new Func<int>(() => API.GetConvarInt("simplesync_modeweather", 0)));
             // And log some important commands
@@ -249,17 +249,33 @@ namespace SimpleSync.Server
 
         #region Exports
 
-        public void SetWeather(string weather)
+        public bool SetWeather(string weather)
         {
-            // If the weather is on the list and the Weather Mode is not set to Real
-            if (validWeather.Contains(weather) && Convars.WeatherMode != SyncMode.Real)
+            // If the weather is not valid, the Real Mode is enabled or there is a transition, return
+            if (!validWeather.Contains(weather) || Convars.WeatherMode == SyncMode.Real || transitionFinish != 0)
             {
-                // Save it
-                currentWeather = weather;
-                // And send it to the clients
-                TriggerClientEvent("simplesync:setWeather", weather, weather, 0);
-                Logging.Log($"Weather set to {weather} via exports");
+                return false;
             }
+
+            // If the dynamic mode is being used, save it for a transition
+            if (Convars.WeatherMode == SyncMode.Dynamic)
+            {
+                transitionWeather = weather;
+                TriggerClientEvent("simplesync:setWeather", currentWeather, transitionWeather, Convars.SwitchTime);
+                Logging.Log($"Started weather switch to {weather}");
+                return true;
+            }
+            // If the static mode is being used, send it instantly
+            else if (Convars.WeatherMode == SyncMode.Static)
+            {
+                currentWeather = weather;
+                TriggerClientEvent("simplesync:setWeather", currentWeather, currentWeather, 0);
+                Logging.Log($"Weather was set to {weather}");
+                return true;
+            }
+
+            // If we got here, the weather type is invalid
+            return false;
         }
 
         #endregion
