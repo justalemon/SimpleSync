@@ -137,7 +137,7 @@ namespace SimpleSync.Server
         {
             // Add the exports
             Exports.Add("setWeather", new Action<string>(SetWeather));
-            Exports.Add("getWeatherNextFetch", new Func<long>(() => nextFetch));
+            Exports.Add("getNextWeatherFetch", new Func<long>(() => nextFetch));
             Exports.Add("getWeatherSyncType", new Func<int>(() => API.GetConvarInt("simplesync_typeweather", 0)));
             // And log some important commands
             Logging.Log("Weather Synchronization has started");
