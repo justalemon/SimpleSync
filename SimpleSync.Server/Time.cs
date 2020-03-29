@@ -296,8 +296,8 @@ namespace SimpleSync.Server
         /// <summary>
         /// Command to Get and Set the sync mode.
         /// </summary>
-        [Command("timesync", Restricted = true)]
-        public void TimeSyncCommand(int source, List<object> args, string raw)
+        [Command("timemode", Restricted = true)]
+        public void TimeModeCommand(int source, List<object> args, string raw)
         {
             // If there is more than one argument
             if (args.Count >= 1)
