@@ -10,14 +10,10 @@ namespace SimpleSync.Server
     /// <summary>
     /// CFX Script that handles the Server Side Time Synchronization.
     /// </summary>
-    public class Time : BaseScript
+    public class Time : Common
     {
         #region Fields
 
-        /// <summary>
-        /// The next time where we should increase the time.
-        /// </summary>
-        private long nextFetch = 0;
         /// <summary>
         /// The current hours.
         /// </summary>
@@ -35,7 +31,7 @@ namespace SimpleSync.Server
         {
             // Add a couple of exports to set the time
             Exports.Add("getTimeSyncMode", new Func<int>(() => API.GetConvarInt("simplesync_modetime", 0)));
-            Exports.Add("setTimeSyncMode", new Func<int, bool>(SetSyncMode));
+            Exports.Add("setTimeSyncMode", new Func<int, bool>((i) => SetSyncMode(i, "simplesync_modetime")));
 
             Exports.Add("setTime", new Action<int, int>(SetTime));
             Exports.Add("getHours", new Func<int>(() => hours));
@@ -55,20 +51,6 @@ namespace SimpleSync.Server
         #endregion
 
         #region Exports
-
-        public bool SetSyncMode(int mode)
-        {
-            // If is not defined on the enum, return
-            if (!Enum.IsDefined(typeof(SyncMode), mode))
-            {
-                return false;
-            }
-            // Otherwise, save the value
-            API.SetConvar("simplesync_modetime", mode.ToString());
-            // And reset the fetch time
-            nextFetch = 0;            
-            return true;
-        }
 
         public void SetTime(int hour, int minute)
         {
@@ -297,31 +279,7 @@ namespace SimpleSync.Server
         /// Command to Get and Set the sync mode.
         /// </summary>
         [Command("timemode", Restricted = true)]
-        public void TimeModeCommand(int source, List<object> args, string raw)
-        {
-            // If there is more than one argument
-            if (args.Count >= 1)
-            {
-                // Try to parse the first argument and save it
-                if (int.TryParse(args[0].ToString(), out int output))
-                {
-                    if (!SetSyncMode(output))
-                    {
-                        Debug.WriteLine($"{output} is not a valid synchronization mode!");
-                        return;
-                    }
-                }
-                // If is not, tell the user
-                else
-                {
-                    Debug.WriteLine("The value specified is not a valid number.");
-                    return;
-                }
-            }
-
-            // Say the current synchronization mode
-            Debug.WriteLine($"The Time sync mode is set to {Convars.TimeMode}");
-        }
+        public void TimeModeCommand(int source, List<object> args, string raw) => ModeCommand(args, "simplesync_modetime");
 
         #endregion
     }

@@ -10,7 +10,7 @@ namespace SimpleSync.Server
     /// <summary>
     /// CFX Script that synchronizes the Weather between clients.
     /// </summary>
-    public class Weather : BaseScript
+    public class Weather : Common
     {
         #region Fields
 
@@ -18,10 +18,6 @@ namespace SimpleSync.Server
         /// The RNG thingy.
         /// </summary>
         private static readonly Random random = new Random();
-        /// <summary>
-        /// The next time where we should check the weather.
-        /// </summary>
-        private long nextFetch = 0;
         /// <summary>
         /// The valid weather names.
         /// </summary>
@@ -133,7 +129,7 @@ namespace SimpleSync.Server
         {
             // Add the exports
             Exports.Add("getWeatherSyncMode", new Func<int>(() => API.GetConvarInt("simplesync_modeweather", 0)));
-            Exports.Add("setTimeSyncMode", new Func<int, bool>(SetSyncMode));
+            Exports.Add("setTimeSyncMode", new Func<int, bool>((i) => SetSyncMode(i, "simplesync_modeweather")));
 
             Exports.Add("getWeather", new Func<string>(() => currentWeather));
             Exports.Add("setWeather", new Func<string, bool>(SetWeather));
@@ -255,20 +251,6 @@ namespace SimpleSync.Server
         #endregion
 
         #region Exports
-
-        public bool SetSyncMode(int mode)
-        {
-            // If is not defined on the enum, return
-            if (!Enum.IsDefined(typeof(SyncMode), mode))
-            {
-                return false;
-            }
-            // Otherwise, save the value
-            API.SetConvar("simplesync_modeweather", mode.ToString());
-            // And reset the fetch time
-            nextFetch = 0;
-            return true;
-        }
 
         public bool SetWeather(string weather)
         {
@@ -481,6 +463,11 @@ namespace SimpleSync.Server
             // So go ahead and set it for all of the players
             SetWeather(newWeather);
         }
+        /// <summary>
+        /// Command to Get and Set the sync mode.
+        /// </summary>
+        [Command("weathermode", Restricted = true)]
+        public void WeatherModeCommand(int source, List<object> args, string raw) => ModeCommand(args, "simplesync_modeweather");
 
         #endregion
     }
