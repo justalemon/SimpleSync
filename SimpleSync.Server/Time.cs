@@ -108,54 +108,56 @@ namespace SimpleSync.Server
         [Tick]
         public async Task UpdateTime()
         {
-            // If the time is set to dynamic
-            if (Convars.TimeMode == SyncMode.Dynamic)
+            // Check the Time Sync Mode
+            switch (Convars.TimeMode)
             {
-                // If the game time is over or equal than the next fetch time
-                if (API.GetGameTimer() >= nextFetch)
-                {
-                    // Calculate the total number of minutes plus the increase
-                    int total = (hours * 60) + minutes + Convars.Increase;
-                    // Tell the system to set this specific number of minutes
-                    SetTime(0, total);
-                    // Set the next fetch time to the specified scale
-                    nextFetch = API.GetGameTimer() + Convars.Scale;
-                    Logging.Log($"Time bump complete!");
-                }
-            }
-            // If the time is set to static, the client already has the previous time
-            else if (Convars.TimeMode == SyncMode.Static)
-            {
-                return;
-            }
-            // If the time is set to real
-            else if (Convars.TimeMode == SyncMode.Real)
-            {
-                // If the game time is over or equal than the next fetch time
-                if (API.GetGameTimer() >= nextFetch)
-                {
-                    // Create a place to store the time zone
-                    DateTime dateTime;
-                    // Try to convert the time to the specified timezone
-                    try
+                // If is set to dynamic
+                case SyncMode.Dynamic:
+                    // If the game time is over or equal than the next fetch time
+                    if (API.GetGameTimer() >= nextFetch)
                     {
-                        dateTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, Convars.TimeZone);
+                        // Calculate the total number of minutes plus the increase
+                        int total = (hours * 60) + minutes + Convars.Increase;
+                        // Tell the system to set this specific number of minutes
+                        SetTime(0, total);
+                        // Set the next fetch time to the specified scale
+                        nextFetch = API.GetGameTimer() + Convars.Scale;
+                        Logging.Log($"Time bump complete!");
                     }
-                    // If the timezone was not found, set PST and return
-                    catch (TimeZoneNotFoundException)
-                    {
-                        Debug.WriteLine($"The Time Zone '{Convars.TimeZone}' was not found!");
-                        Debug.WriteLine($"Use the command /timezones to see the available TZs");
-                        Debug.WriteLine($"Just in case, we changed the TZ to 'Pacific Standard Time'");
-                        Convars.TimeZone = "Pacific Standard Time";
-                        return;
-                    }
+                    return;
+                // If is set to static, just return
+                // The client already has the correct time
+                case SyncMode.Static:
+                    return;
+                // If the time is set to real
+                case SyncMode.Real:
 
-                    // If no errors happened, set the correct time
-                    SetTime(dateTime.Hour, dateTime.Minute);
-                    // And set the next fetch time to one second in the future
-                    nextFetch = API.GetGameTimer() + 1000;
-                }
+                    // If the game time is over or equal than the next fetch time
+                    if (API.GetGameTimer() >= nextFetch)
+                    {
+                        // Create a place to store the time zone
+                        DateTime dateTime;
+                        // Try to convert the time to the specified timezone
+                        try
+                        {
+                            dateTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, Convars.TimeZone);
+                        }
+                        // If the timezone was not found, set PST and return
+                        catch (TimeZoneNotFoundException)
+                        {
+                            Debug.WriteLine($"The Time Zone '{Convars.TimeZone}' was not found!");
+                            Debug.WriteLine($"Use the command /timezones to see the available TZs");
+                            Debug.WriteLine($"Just in case, we changed the TZ to 'Pacific Standard Time'");
+                            Convars.TimeZone = "Pacific Standard Time";
+                            return;
+                        }
+
+                        // If no errors happened, set the correct time
+                        SetTime(dateTime.Hour, dateTime.Minute);
+                        // And set the next fetch time to one second in the future
+                        nextFetch = API.GetGameTimer() + 1000;
+                    }
+                    return;
             }
         }
 
