@@ -211,14 +211,9 @@ namespace SimpleSync.Server
                     }
 
                     // Now, time to parse them
-                    if (!int.TryParse(args[0].ToString(), out int newHours))
+                    if (!int.TryParse(args[0].ToString(), out int newHours) || !int.TryParse(args[1].ToString(), out int newMinutes))
                     {
-                        Debug.WriteLine("The first parameter is not a number.");
-                        return;
-                    }
-                    if (!int.TryParse(args[1].ToString(), out int newMinutes))
-                    {
-                        Debug.WriteLine("The second parameter is not a number.");
+                        Debug.WriteLine("One of the parameters are not valid numbers.");
                         return;
                     }
 
@@ -273,10 +268,7 @@ namespace SimpleSync.Server
         /// Shows the current internal time of the game.
         /// </summary>
         [Command("gametimer", Restricted = true)]
-        public void GameTimerCommand()
-        {
-            Debug.WriteLine($"Current Game Time is {API.GetGameTimer()}");
-        }
+        public void GameTimerCommand() => Debug.WriteLine($"Current Game Time is {API.GetGameTimer()}");
         /// <summary>
         /// Command to Get and Set the sync mode.
         /// </summary>
