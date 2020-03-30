@@ -79,7 +79,7 @@ namespace SimpleSync.Server
 
             // If we got here, the Time Zone is valid so save it
             Convars.TimeZone = tz;
-            Logging.Log($"Time Zone set to {tz} via exports");
+            Logging.Log($"Time Zone set to {tz} via SetTimeZone");
             return true;
         }
 
@@ -219,6 +219,7 @@ namespace SimpleSync.Server
 
                     // If we got here, the numbers are valid
                     SetTime(newHours, newMinutes);
+                    Debug.WriteLine($"The time was set to {newHours:D2}:{newMinutes:D2}");
                     break;
             }
         }
