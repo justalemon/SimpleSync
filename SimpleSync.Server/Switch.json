@@ -1,0 +1,34 @@
+{
+    "CLEAR": [
+        "CLEARING",
+        "OVERCAST"
+    ],
+    "CLOUDS": [
+        "CLEARING",
+        "OVERCAST"
+    ],
+    "EXTRASUNNY": [
+        "CLEARING",
+        "OVERCAST"
+    ],
+    "CLEARING": [
+        "FOGGY",
+        "RAIN",
+        "CLOUDS",
+        "EXTRASUNNY",
+        "SMOG",
+        "FOGGY"
+    ],
+    "THUNDER": [
+        "CLEARING"
+    ],
+    "RAIN": [
+        "CLEARING"
+    ],
+    "SMOG": [
+        "CLEAR"
+    ],
+    "FOGGY": [
+        "CLEAR"
+    ]
+}
