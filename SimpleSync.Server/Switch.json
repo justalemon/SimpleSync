@@ -16,14 +16,25 @@
         "RAIN",
         "CLOUDS",
         "EXTRASUNNY",
-        "SMOG",
-        "FOGGY"
+        "SMOG"
     ],
     "THUNDER": [
-        "CLEARING"
+        "CLEARING",
+        "RAIN"
     ],
     "RAIN": [
-        "CLEARING"
+        "CLEARING",
+        "THUNDER",
+        "BLIZZARD",
+        "XMAS"
+    ],
+    "BLIZZARD": [
+        "XMAS",
+        "RAIN"
+    ],
+    "XMAS": [
+        "BLIZZARD",
+        "RAIN"
     ],
     "SMOG": [
         "CLEAR"
