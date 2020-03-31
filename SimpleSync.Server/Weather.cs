@@ -174,97 +174,25 @@ namespace SimpleSync.Server
         /// <returns>The new weather.</returns>
         public string NextWeather()
         {
-            // 25% chance of keeping the same weather (0-1-2-3)
-            if (random.Next(0, 4) == 0)
+            // If the current weather does not has a weather specified, return CLEAR
+            if (!switches.ContainsKey(currentWeather))
             {
-                return currentWeather;
+                Debug.WriteLine($"Warning: There is no entry for {currentWeather} for dynamic switches, CLEAR was returned");
+                return "CLEAR";
             }
 
-            // Otherwise, choose one that is correct based on the current one
-            if (currentWeather == "EXTRASUNNY")
+            // Now, get the list for the current weather
+            List<string> weathers = switches[currentWeather];
+
+            // If there are no weathers to switch, return CLEAR
+            if (weathers.Count == 0)
             {
-                // Extra Sunny goes to either Clear or Clouds
-                switch (random.Next(0, 2))
-                {
-                    case 0:
-                        return "CLEAR";
-                    case 1:
-                        return "CLOUDS";
-                }
-            }
-            else if (currentWeather == "CLEAR" || currentWeather == "CLOUDS")
-            {
-                // This two go to Clearing or Overcast
-                switch (random.Next(0, 2))
-                {
-                    case 0:
-                        return "CLEARING";
-                    case 1:
-                        return "OVERCAST";
-                }
-            }
-            else if (currentWeather == "CLEARING" || currentWeather == "OVERCAST")
-            {
-                // Clearing and Overcast can change to Rain, Fog, Cloudy, Extra Sunny, Smog or Clear
-                switch (random.Next(0, 6))
-                {
-                    case 0:
-                        return "RAIN";
-                    case 1:
-                        return "FOGGY";
-                    case 2:
-                        return "CLOUDS";
-                    case 3:
-                        return "EXTRASUNNY";
-                    case 4:
-                        return "SMOG";
-                    case 5:
-                        return "CLEAR";
-                }
-            }
-            else if (currentWeather == "RAIN")
-            {
-                // 33% chance between Thunder, Xmas Snow and Clearing
-                switch (random.Next(0, 3))
-                {
-                    case 0:
-                        return "THUNDER";
-                    case 1:
-                        return "XMAS";
-                    case 2:
-                        return "CLEARING";
-                }
-            }
-            else if (currentWeather == "THUNDER")
-            {
-                // 50-50 chance between Rain and Clearing
-                switch (random.Next(0, 2))
-                {
-                    case 0:
-                        return "RAIN";
-                    case 1:
-                        return "CLEARING";
-                }
-            }
-            else if (currentWeather == "SMOG" || currentWeather == "FOGGY")
-            {
-                // The Smog and Fog will always be cleared
-                return "CLEARING";
-            }
-            else if (currentWeather == "XMAS")
-            {
-                // Xmas Snow will go back to Rain or Overcast
-                switch (random.Next(0, 2))
-                {
-                    case 0:
-                        return "RAIN";
-                    case 1:
-                        return "OVERCAST";
-                }
+                Debug.WriteLine($"Warning: {currentWeather} does not has dynamic switches, CLEAR was returned");
+                return "CLEAR";
             }
 
-            // If somehow we missed everything back there, go back to clearing
-            return "CLEARING";
+            // If we got here, return a random weather
+            return weathers[random.Next(weathers.Count)];
         }
 
         #endregion
