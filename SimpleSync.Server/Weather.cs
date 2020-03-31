@@ -1,5 +1,6 @@
 ﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
+using Newtonsoft.Json;
 using SimpleSync.Shared;
 using System;
 using System.Collections.Generic;
@@ -109,6 +110,10 @@ namespace SimpleSync.Server
             { 804, "CLOUDS" }, // overcast clouds: 85-100%
         };
         /// <summary>
+        /// The weather switches to be used.
+        /// </summary>
+        private static Dictionary<string, List<string>> switches = new Dictionary<string, List<string>>();
+        /// <summary>
         /// The current weather.
         /// </summary>
         private string currentWeather = "EXTRASUNNY";
@@ -138,6 +143,20 @@ namespace SimpleSync.Server
             Exports.Add("getNextWeatherFetch", new Func<long>(() => nextFetch));
 
             Exports.Add("getWeatherTransitionFinish", new Func<long>(() => transitionFinish));
+
+            // Get the Weather Switches as a string
+            string data = API.LoadResourceFile(API.GetCurrentResourceName(), "Switch.json");
+            // And try to parse it
+            try
+            {
+                switches = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(data);
+            }
+            // If we failed, notify it
+            catch (JsonException e)
+            {
+                Debug.WriteLine($"Error when parsing Switch.json: {e.Message}");
+            }
+
             // And log some important commands
             Logging.Log("Weather Synchronization has started");
             Logging.Log($"Sync Mode is set to {Convars.WeatherMode}");
