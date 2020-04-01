@@ -1,5 +1,6 @@
 ﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
+using SimpleSync.Shared;
 using System;
 using System.Collections.Generic;
 
@@ -33,6 +34,20 @@ namespace SimpleSync.Server
 
         #endregion
 
+        #region Network Events
+
+        /// <summary>
+        /// Sends the updated Artificial Lights activation.
+        /// </summary>
+        [EventHandler("simplesync:requestLights")]
+        public void RequestLights([FromSource]Player player)
+        {
+            Logging.Log($"Client {player.Handle} ({player.Name}) requested the Light Activation");
+            player.TriggerEvent("simplesync:setLights", Enabled);
+        }
+
+        #endregion
+
         #region Commands
 
         /// <summary>
@@ -58,8 +73,9 @@ namespace SimpleSync.Server
                     return;
                 }
 
-                // Otherwise, set it and notify about it
+                // Otherwise, set it, send it and notify about it
                 Enabled = enabled;
+                TriggerClientEvent("simplesync:setLights", enabled);
                 Debug.WriteLine("The Artificial Lights have been " + (enabled ? "Enabled" : "Disabled"));
             }
 
