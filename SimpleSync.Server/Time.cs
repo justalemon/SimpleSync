@@ -173,6 +173,10 @@ namespace SimpleSync.Server
         {
             switch (Convars.TimeMode)
             {
+                // If the synchronization is disabled, show a message and return
+                case SyncMode.Disabled:
+                    Debug.WriteLine("Time synchronization is Disabled");
+                    return;
                 // If the sync mode is set to Real, show the IRL Time
                 case SyncMode.Real:
                     DateTime tz = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, Convars.TimeZone);

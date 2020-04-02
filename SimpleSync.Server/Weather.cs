@@ -364,6 +364,16 @@ namespace SimpleSync.Server
         [Command("weather", Restricted = true)]
         public void WeatherCommand(int source, List<object> args, string raw)
         {
+            // Get the mode and save it for later
+            SyncMode mode = Convars.WeatherMode;
+
+            // If the Weather Sync is disabled, say it and return
+            if (mode == SyncMode.Disabled)
+            {
+                Debug.WriteLine("Weather synchronization is Disabled");
+                return;
+            }
+
             // If there are no arguments specified
             if (args.Count == 0)
             {
@@ -373,7 +383,7 @@ namespace SimpleSync.Server
             }
 
             // If we have OpenWeather synchronization enabled, the weather can't be changed
-            if (Convars.WeatherMode == SyncMode.Real)
+            if (mode == SyncMode.Real)
             {
                 Debug.WriteLine("The weather can't be changed if OpenWeatherMap is enabled");
                 return;
@@ -391,7 +401,7 @@ namespace SimpleSync.Server
             }
 
             // If weather is set to dynamic and there is a switch in progress, return
-            if (Convars.WeatherMode == SyncMode.Dynamic && transitionFinish != 0)
+            if (mode == SyncMode.Dynamic && transitionFinish != 0)
             {
                 Debug.WriteLine($"Weather can't be changed when there is a transition in progress");
                 return;
