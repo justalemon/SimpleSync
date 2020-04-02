@@ -6,6 +6,10 @@
     public enum SyncMode
     {
         /// <summary>
+        /// Script will not sync it.
+        /// </summary>
+        Disabled = -1,
+        /// <summary>
         /// Changes are made dynamically.
         /// </summary>
         Dynamic = 0,
