@@ -6,7 +6,9 @@ SimpleSync is a script for FiveM that allows you to synchronize the Weather, Tim
 * Static (the Weather and Time never changes, unless is done manually)
 * Real (uses the information of real-life cities via Timezones and OpenWeatherMap for Time and Weather respectively)
 
-Unlike other Synchronization scripts, the resource is highly configurable. You can change the Dynamic Weather switches, the duration of the Time and more options. Developers even have exports that they can use! No more scripts fighting for controlling the Time and Weather.
+Unlike other Synchronization scripts, the resource is highly configurable. You can change the Dynamic Weather switches, the scale of the Time and more options. No more scripts fighting for controlling the Time and Weather! Developers have exports available that they can use.
+
+Before using SimpleSync, disable other Time and Weather scripts like vMenu (`vmenu_enable_weather_sync` and `vmenu_enable_time_sync` convars to `false`) and vSync (stop the resource).
 
 [appveyor-img]: https://img.shields.io/appveyor/ci/justalemon/simplesync.svg?label=appveyor
 [appveyor-url]: https://ci.appveyor.com/project/justalemon/simplesync
