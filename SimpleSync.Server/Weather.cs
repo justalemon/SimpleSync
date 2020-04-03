@@ -367,8 +367,8 @@ namespace SimpleSync.Server
             // Get the mode and save it for later
             SyncMode mode = Convars.WeatherMode;
 
-            // If the Weather Sync is disabled, say it and return
-            if (mode == SyncMode.Disabled)
+            // If the Weather Sync is disabled or the enum value is not valid, say it and return
+            if (mode == SyncMode.Disabled || !Enum.IsDefined(typeof(SyncMode), mode))
             {
                 Debug.WriteLine("Weather synchronization is Disabled");
                 return;
