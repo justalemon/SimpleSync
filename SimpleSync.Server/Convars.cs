@@ -23,6 +23,15 @@ namespace SimpleSync.Server
             get => (SyncMode)API.GetConvarInt("simplesync_modeweather", 0);
             set => API.SetConvar("simplesync_modeweather", ((int)value).ToString());
         }
+        /// <summary>
+        /// The current Sync mode for the Lights.
+        /// Please note that Real synchronization is not possible for lights.
+        /// </summary>
+        public static SyncMode LightsMode
+        {
+            get => (SyncMode)API.GetConvarInt("simplesync_modelights", 1);
+            set => API.SetConvar("simplesync_modelights", ((int)value).ToString());
+        }
 
         /// <summary>
         /// On Dynamic Time: The time between the minute bumps.
@@ -60,5 +69,22 @@ namespace SimpleSync.Server
         /// On Dynamic Weather: The maximum time between one weather and the other.
         /// </summary>
         public static int MaxSwitch => API.GetConvarInt("simplesync_switchmax", 1800000); // 30 Minutes
+
+        /// <summary>
+        /// On Dynamic Lights: The Minimum time between blackouts.
+        /// </summary>
+        public static int BlackoutSwitchMin => API.GetConvarInt("simplesync_blackoutswitchmin", 600000); // 10 minutes
+        /// <summary>
+        /// On Dynamic Lights: The Maximum time between blackouts.
+        /// </summary>
+        public static int BlackoutSwitchMax => API.GetConvarInt("simplesync_blackoutswitchmax", 180000); // 30 minutes
+        /// <summary>
+        /// On Dynamic Lights: The Minimum duration of a blackout.
+        /// </summary>
+        public static int BlackoutDurationMin => API.GetConvarInt("simplesync_blackoutdurationmin", 60000); // 1 minute
+        /// <summary>
+        /// On Dynamic Lights: The Maximum duration of a blackout.
+        /// </summary>
+        public static int BlackoutDurationMax => API.GetConvarInt("simplesync_blackoutdurationmax", 120000); // 2 minutes
     }
 }
