@@ -9,7 +9,7 @@ namespace SimpleSync.Server
     /// <summary>
     /// Script for the synchronization of Light Sources (previously called Blackout).
     /// </summary>
-    public class Lights : BaseScript
+    public class Lights : Common
     {
         #region Properties
 
