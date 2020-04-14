@@ -22,6 +22,10 @@ namespace SimpleSync.Server
         /// The current minutes.
         /// </summary>
         private int minutes = 0;
+        /// <summary>
+        /// The default Time Zone for the current environment.
+        /// </summary>
+        private readonly string defaultTimeZone = GetDefaultTimezone();
 
         #endregion
 
@@ -46,6 +50,24 @@ namespace SimpleSync.Server
             Logging.Log($"Sync Mode is set to {Convars.TimeMode}");
             Logging.Log($"Scale is set to {Convars.Scale}");
             Logging.Log($"Time Zone is set to {Convars.TimeZone}");
+        }
+
+        #endregion
+
+        #region Tools
+
+        public static string GetDefaultTimezone()
+        {
+            // Check the operating system and return the correct timezone
+            switch (Environment.OSVersion.Platform)
+            {
+                case PlatformID.Win32NT:
+                    return "Pacific Standard Time";
+                case PlatformID.Unix:
+                    return "America/Los_Angeles";
+                default:
+                    throw new NotSupportedException($"FiveM reports that we are running on {Environment.OSVersion.Platform}");
+            }
         }
 
         #endregion
@@ -147,8 +169,8 @@ namespace SimpleSync.Server
                         {
                             Debug.WriteLine($"The Time Zone '{Convars.TimeZone}' was not found!");
                             Debug.WriteLine($"Use the command /timezones to see the available TZs");
-                            Debug.WriteLine($"Just in case, we changed the TZ to 'Pacific Standard Time'");
-                            Convars.TimeZone = "Pacific Standard Time";
+                            Debug.WriteLine($"Just in case, we changed the TZ to '{defaultTimeZone}'");
+                            Convars.TimeZone = defaultTimeZone;
                             return;
                         }
 
