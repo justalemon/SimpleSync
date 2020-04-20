@@ -7,6 +7,10 @@
         "CLEARING",
         "OVERCAST"
     ],
+    "OVERCAST": [
+        "CLEARING",
+        "CLEAR"
+    ],
     "EXTRASUNNY": [
         "CLEARING",
         "OVERCAST"
