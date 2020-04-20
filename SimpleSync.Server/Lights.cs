@@ -111,7 +111,7 @@ namespace SimpleSync.Server
         /// <summary>
         /// Command to get and set the status of the lights.
         /// </summary>
-        [Command("lights")]
+        [Command("lights", Restricted = true)]
         public void LightsCommand(int source, List<object> args, string raw)
         {
             // If there are no arguments
