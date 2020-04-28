@@ -77,7 +77,7 @@ namespace SimpleSync.Server
         /// <summary>
         /// On Dynamic Lights: The Maximum time between blackouts.
         /// </summary>
-        public static int BlackoutSwitchMax => API.GetConvarInt("simplesync_blackoutswitchmax", 180000); // 30 minutes
+        public static int BlackoutSwitchMax => API.GetConvarInt("simplesync_blackoutswitchmax", 1800000); // 30 minutes
         /// <summary>
         /// On Dynamic Lights: The Minimum duration of a blackout.
         /// </summary>
