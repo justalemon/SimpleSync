@@ -43,20 +43,31 @@ namespace SimpleSync.Server
 
         public static async Task<WeatherData> GetWeather()
         {
-            // Otherwise, format the correct URL
+            // Format the OpenWeatherMap API URL
             string url = string.Format(openWeatherURL, Convars.OpenWeatherCity, Convars.OpenWeatherKey);
-            // Make the request
-            HttpResponseMessage response = await url.WithHeader("User-Agent", "SimpleSync (+https://github.com/justalemon/SimpleSync)").GetAsync();
-            // And get the text of the response
-            string text = await response.Content.ReadAsStringAsync();
 
-            // If the status code is not 200
-            if (response.StatusCode != HttpStatusCode.OK)
+            // And try to make the request
+            HttpResponseMessage response = null;
+            try
             {
-                // Show the status code and content and return
-                Debug.WriteLine($"OpenWeather returned code {response.StatusCode}! ({text})");
+                response = await url.WithHeader("User-Agent", "SimpleSync (+https://github.com/justalemon/SimpleSync)").GetAsync();
+            }
+            // If there was a problem with the request
+            catch (FlurlHttpException e)
+            {
+                // If the request was completed
+                if (e.Call.Completed)
+                {
+                    Debug.WriteLine($"OpenWeatherMap returned code {(int)e.Call.HttpStatus} {e.Call.HttpStatus}!");
+                    return null;
+                }
+                // If the request was not completed
+                Debug.WriteLine($"Error when trying to request information from OpenWeatherMap: {e.Message}");
                 return null;
             }
+
+            // And get the text of the response
+            string text = await response.Content.ReadAsStringAsync();
 
             // Parse the data as JSON
             City data = JsonConvert.DeserializeObject<City>(text);

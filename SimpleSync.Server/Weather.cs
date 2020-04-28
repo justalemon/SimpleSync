@@ -326,6 +326,7 @@ namespace SimpleSync.Server
                     // If the request failed
                     if (response == null)
                     {
+                        Debug.WriteLine($"We will try again in 60 seconds");
                         // Leave a 60 seconds cooldown
                         nextFetch = API.GetGameTimer() + 60000;
                         // And return
