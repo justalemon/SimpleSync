@@ -136,8 +136,12 @@ namespace SimpleSync.Server
                 TriggerClientEvent("simplesync:setLights", enabled);
                 Debug.WriteLine("The Artificial Lights have been " + (enabled ? "Enabled" : "Disabled"));
             }
-
         }
+        /// <summary>
+        /// Command to Get and Set the sync mode.
+        /// </summary>
+        [Command("lightsmode", Restricted = true)]
+        public void LightsModeCommand(int source, List<object> args, string raw) => ModeCommand(args, "simplesync_modelights");
 
         #endregion
     }
