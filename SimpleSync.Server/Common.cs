@@ -51,8 +51,10 @@ namespace SimpleSync.Server
                 }
             }
 
+            // Get the sync mode and show it
+            SyncMode mode = (SyncMode)API.GetConvarInt(convar, 0);
             // Say the current synchronization mode
-            Debug.WriteLine($"The synchronization mode is set to {Convars.TimeMode}");
+            Debug.WriteLine($"The synchronization mode is set to {mode}");
         }
     }
 }
