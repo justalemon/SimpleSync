@@ -27,7 +27,7 @@ namespace SimpleSync.Client
         /// Sets the Weather on this client.
         /// </summary>
         [EventHandler("simplesync:setWeather")]
-        public void SetWeather(string from, string to, int duration)
+        public async void SetWeather(string from, string to, int duration)
         {
             // Log what we are going to do
             Logging.Log($"Started weather switch from {from} to {to} ({duration}s)");
@@ -47,9 +47,15 @@ namespace SimpleSync.Client
                 API.ClearWeatherTypePersist();
                 // Convert the MS to S
                 float ms = duration == 0 ? 0 : duration / 1000f;
-                // And set the destination weather
+                // Set the destination weather
                 API.SetWeatherTypeOvertimePersist(to, ms);
+                // And wait
+                await Delay(duration);
             }
+
+            // Finally, set the correct snow marks based on the weather
+            API.SetForceVehicleTrails(to == "XMAS");
+            API.SetForcePedFootstepsTracks(to == "XMAS");
         }
 
         #endregion
