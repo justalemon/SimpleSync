@@ -4,7 +4,7 @@
     <TargetFramework>net452</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <AssemblyName>SimpleSync.Server.net</AssemblyName>
+    <AssemblyName>$(AssemblyName).net</AssemblyName>
     <DefineConstants>SERVER</DefineConstants>
   </PropertyGroup>
 

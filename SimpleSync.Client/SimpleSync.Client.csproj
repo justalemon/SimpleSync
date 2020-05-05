@@ -4,7 +4,7 @@
     <TargetFramework>net452</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <AssemblyName>SimpleSync.Client.net</AssemblyName>
+    <AssemblyName>$(AssemblyName).net</AssemblyName>
     <DefineConstants>CLIENT</DefineConstants>
   </PropertyGroup>
 
