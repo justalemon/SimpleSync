@@ -1,6 +1,6 @@
 ﻿using CitizenFX.Core;
 
-namespace SimpleSync.Shared
+namespace SimpleSync
 {
     public static class Logging
     {
