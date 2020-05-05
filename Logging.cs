@@ -1,15 +1,9 @@
 ﻿using CitizenFX.Core;
-using CitizenFX.Core.Native;
 
 namespace SimpleSync.Shared
 {
     public static class Logging
     {
-        /// <summary>
-        /// If the debug logging is enabled.
-        /// </summary>
-        private static bool IsDebugEnabled => API.GetConvarInt("simplesync_debug", 0) != 0;
-
         /// <summary>
         /// Logs a message if debug mode is enabled.
         /// </summary>
@@ -17,7 +11,7 @@ namespace SimpleSync.Shared
         public static void Log(string message)
         {
             // If Debug mode is enabled
-            if (IsDebugEnabled)
+            if (Convars.Debug)
             {
                 // Log the message in the console
                 Debug.WriteLine(message);

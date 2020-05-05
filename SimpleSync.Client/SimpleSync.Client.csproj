@@ -21,6 +21,7 @@
       <IncludeAssets>compile</IncludeAssets>
     </PackageReference>
     <Compile Include="../Logging.cs" />
+    <Compile Include="../Convars.cs" />
   </ItemGroup>
 
 </Project>

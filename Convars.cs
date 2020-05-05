@@ -1,12 +1,43 @@
 ﻿using CitizenFX.Core.Native;
 
-namespace SimpleSync.Server
+namespace SimpleSync
 {
+#if SERVER
+    /// <summary>
+    /// The Synchronization Mode for Weather and Time.
+    /// </summary>
+    public enum SyncMode
+    {
+        /// <summary>
+        /// Script will not sync it.
+        /// </summary>
+        Disabled = -1,
+        /// <summary>
+        /// Changes are made dynamically.
+        /// </summary>
+        Dynamic = 0,
+        /// <summary>
+        /// Sets a specific value permanently.
+        /// </summary>
+        Static = 1,
+        /// <summary>
+        /// Synchronization is done with IRL Information.
+        /// </summary>
+        Real = 2,
+    }
+#endif
+
     /// <summary>
     /// A Class for a quick access to Convars.
     /// </summary>
     public static class Convars
     {
+        /// <summary>
+        /// If the debug logging is enabled.
+        /// </summary>
+        public static bool Debug => API.GetConvarInt("simplesync_debug", 0) != 0;
+
+#if SERVER
         /// <summary>
         /// The current Sync mode for the Time.
         /// </summary>
@@ -86,5 +117,6 @@ namespace SimpleSync.Server
         /// On Dynamic Lights: The Maximum duration of a blackout.
         /// </summary>
         public static int BlackoutDurationMax => API.GetConvarInt("simplesync_blackoutdurationmax", 120000); // 2 minutes
+#endif
     }
 }
