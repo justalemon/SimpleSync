@@ -52,9 +52,11 @@ namespace SimpleSync.Client
                 await Delay(duration);
             }
 
-            // Finally, set the correct snow marks based on the weather
+            // Set the correct snow marks based on the weather
             API.SetForceVehicleTrails(to == "XMAS");
             API.SetForcePedFootstepsTracks(to == "XMAS");
+            // Set the correct water height
+            API.N_0xc54a08c85ae4d410(to == "XMAS" ? 3 : 0);
         }
 
         #endregion
