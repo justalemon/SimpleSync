@@ -64,6 +64,13 @@ namespace SimpleSync.Client
                 // Use the Ice and Snow footstep sounds
                 API.RequestScriptAudioBank("ICE_FOOTSTEPS", false);
                 API.RequestScriptAudioBank("SNOW_FOOTSTEPS", false);
+                // And use the Snow particle effects
+                API.RequestNamedPtfxAsset("core_snow");
+                while (!API.HasNamedPtfxAssetLoaded("core_snow"))
+                {
+                    await Delay(0);
+                }
+                API.UseParticleFxAssetNextCall("core_snow");
             }
             // If the weather is set to something else
             else
@@ -71,6 +78,11 @@ namespace SimpleSync.Client
                 // Unload the Ice and Snow foostep sounds
                 API.ReleaseNamedScriptAudioBank("ICE_FOOTSTEPS");
                 API.ReleaseNamedScriptAudioBank("SNOW_FOOTSTEPS");
+                // Remove the particle effects for Snow (if is loaded)
+                if (API.HasNamedPtfxAssetLoaded("core_snow"))
+                {
+                    API.RemoveNamedPtfxAsset("core_snow");
+                }
             }
         }
 
