@@ -57,6 +57,21 @@ namespace SimpleSync.Client
             API.SetForcePedFootstepsTracks(to == "XMAS");
             // Set the correct water height
             API.N_0xc54a08c85ae4d410(to == "XMAS" ? 3 : 0);
+
+            // If the weather is set to XMAS
+            if (to == "XMAS")
+            {
+                // Use the Ice and Snow footstep sounds
+                API.RequestScriptAudioBank("ICE_FOOTSTEPS", false);
+                API.RequestScriptAudioBank("SNOW_FOOTSTEPS", false);
+            }
+            // If the weather is set to something else
+            else
+            {
+                // Unload the Ice and Snow foostep sounds
+                API.ReleaseNamedScriptAudioBank("ICE_FOOTSTEPS");
+                API.ReleaseNamedScriptAudioBank("SNOW_FOOTSTEPS");
+            }
         }
 
         #endregion
