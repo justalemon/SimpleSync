@@ -15,7 +15,10 @@ namespace SimpleSync.Client
         {
             // Once this script is loaded, ask the sever for sync
             TriggerServerEvent("simplesync:requestWeather");
-            Logging.Log("Weather Synchronization has started");
+            if (Convars.Debug)
+            {
+                Debug.WriteLine("Weather Synchronization has started");
+            }
         }
 
         #endregion
@@ -29,7 +32,10 @@ namespace SimpleSync.Client
         public async void SetWeather(string from, string to, int duration)
         {
             // Log what we are going to do
-            Logging.Log($"Started weather switch from {from} to {to} ({duration}s)");
+            if (Convars.Debug)
+            {
+                Debug.WriteLine($"Started weather switch from {from} to {to} ({duration}s)");
+            }
 
             // Clear any overrides set
             API.ClearOverrideWeather();

@@ -157,10 +157,13 @@ namespace SimpleSync.Server
             }
 
             // And log some important commands
-            Logging.Log("Weather Synchronization has started");
-            Logging.Log($"Sync Mode is set to {Convars.WeatherMode}");
-            Logging.Log(string.IsNullOrWhiteSpace(Convars.OpenWeatherKey) ? "No OpenWeather API Key is set" : "An OpenWeather API Key is present");
-            Logging.Log(string.IsNullOrWhiteSpace(Convars.OpenWeatherCity) ? "No OpenWeather City is set" : $"OpenWeather City is set to {Convars.OpenWeatherCity}");
+            if (Convars.Debug)
+            {
+                Debug.WriteLine("Weather Synchronization has started");
+                Debug.WriteLine($"Sync Mode is set to {Convars.WeatherMode}");
+                Debug.WriteLine(string.IsNullOrWhiteSpace(Convars.OpenWeatherKey) ? "No OpenWeather API Key is set" : "An OpenWeather API Key is present");
+                Debug.WriteLine(string.IsNullOrWhiteSpace(Convars.OpenWeatherCity) ? "No OpenWeather City is set" : $"OpenWeather City is set to {Convars.OpenWeatherCity}");
+            }
         }
 
         #endregion
@@ -212,8 +215,11 @@ namespace SimpleSync.Server
                 transitionWeather = weather;
                 TriggerClientEvent("simplesync:setWeather", currentWeather, transitionWeather, Convars.Transition);
                 transitionFinish = API.GetGameTimer() + Convars.Transition;
-                Logging.Log($"Started weather switch to {weather} (from {currentWeather})");
-                Logging.Log($"The transition will finish on {transitionFinish}");
+                if (Convars.Debug)
+                {
+                    Debug.WriteLine($"Started weather switch to {weather} (from {currentWeather})");
+                    Debug.WriteLine($"The transition will finish on {transitionFinish}");
+                }
                 return true;
             }
             // If the static mode is being used, send it instantly
@@ -221,7 +227,10 @@ namespace SimpleSync.Server
             {
                 currentWeather = weather;
                 TriggerClientEvent("simplesync:setWeather", currentWeather, currentWeather, 0);
-                Logging.Log($"Weather was set to {weather}");
+                if (Convars.Debug)
+                {
+                    Debug.WriteLine($"Weather was set to {weather}");
+                }
                 return true;
             }
 
@@ -239,7 +248,10 @@ namespace SimpleSync.Server
         [EventHandler("simplesync:requestWeather")]
         public void RequestWeather([FromSource]Player player)
         {
-            Logging.Log($"Client {player.Handle} ({player.Name}) requested the Weather");
+            if (Convars.Debug)
+            {
+                Debug.WriteLine($"Client {player.Handle} ({player.Name}) requested the Weather");
+            }
 
             switch (Convars.WeatherMode)
             {
@@ -282,20 +294,29 @@ namespace SimpleSync.Server
                     // Otherwise, don't do a switch
                     else
                     {
-                        Logging.Log($"The weather will stay the same as before ({newWeather})");
+                        if (Convars.Debug)
+                        {
+                            Debug.WriteLine($"The weather will stay the same as before ({newWeather})");
+                        }
                     }
 
                     // Then, save the time for the next fetch
                     nextFetch = API.GetGameTimer() + random.Next(Convars.MinSwitch, Convars.MaxSwitch);
 
-                    Logging.Log($"The next weather will be fetched on {nextFetch}");
+                    if (Convars.Debug)
+                    {
+                        Debug.WriteLine($"The next weather will be fetched on {nextFetch}");
+                    }
                     return;
                 }
                 // If the game time is over or equal than the end of the transition and two weather do not match
                 else if (API.GetGameTimer() >= transitionFinish && currentWeather != transitionWeather)
                 {
-                    Logging.Log($"Transition from {currentWeather} to {transitionWeather} was finished");
-                    Logging.Log($"Setting transition weather as current and resetting time");
+                    if (Convars.Debug)
+                    {
+                        Debug.WriteLine($"Transition from {currentWeather} to {transitionWeather} was finished");
+                        Debug.WriteLine($"Setting transition weather as current and resetting time");
+                    }
                     // Set the transition weather as the current weather
                     currentWeather = transitionWeather;
                     // And set the transition time to zero
@@ -339,7 +360,10 @@ namespace SimpleSync.Server
                         currentWeather = openWeatherCodes[response.ID];
                         // And send it to all of the clients
                         TriggerClientEvent("simplesync:setWeather", currentWeather, currentWeather, 0);
-                        Logging.Log($"Weather was set to {currentWeather} from OpenWeather ID {response.ID}");
+                        if (Convars.Debug)
+                        {
+                            Debug.WriteLine($"Weather was set to {currentWeather} from OpenWeather ID {response.ID}");
+                        }
                     }
                     // If we don't have it
                     else

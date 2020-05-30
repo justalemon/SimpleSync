@@ -54,7 +54,10 @@ namespace SimpleSync.Server
         [EventHandler("simplesync:requestLights")]
         public void RequestLights([FromSource]Player player)
         {
-            Logging.Log($"Client {player.Handle} ({player.Name}) requested the Light Activation");
+            if (Convars.Debug)
+            {
+                Debug.WriteLine($"Client {player.Handle} ({player.Name}) requested the Light Activation");
+            }
             player.TriggerEvent("simplesync:setLights", Enabled);
         }
 
@@ -73,7 +76,10 @@ namespace SimpleSync.Server
                     if (nextFetch == 0)
                     {
                         nextFetch = API.GetGameTimer() + random.Next(Convars.BlackoutSwitchMin, Convars.BlackoutSwitchMax);
-                        Logging.Log($"Setting first blackout time to {nextFetch}");
+                        if (Convars.Debug)
+                        {
+                            Debug.WriteLine($"Setting first blackout time to {nextFetch}");
+                        }
                     }
                     // If the current time is over or equal than the next fetch time
                     else if (API.GetGameTimer() >= nextFetch)
@@ -84,8 +90,11 @@ namespace SimpleSync.Server
                             Enabled = false;
                             TriggerClientEvent("simplesync:setLights", false);
                             nextFetch = API.GetGameTimer() + random.Next(Convars.BlackoutDurationMin, Convars.BlackoutDurationMax);
-                            Logging.Log("Artificial lights are now turned OFF");
-                            Logging.Log($"Blackout will finish in {nextFetch}");
+                            if (Convars.Debug)
+                            {
+                                Debug.WriteLine("Artificial lights are now turned OFF");
+                                Debug.WriteLine($"Blackout will finish in {nextFetch}");
+                            }
                         }
                         // If the lights are disabled, enable them and set the 
                         else
@@ -93,8 +102,11 @@ namespace SimpleSync.Server
                             Enabled = true;
                             TriggerClientEvent("simplesync:setLights", true);
                             nextFetch = API.GetGameTimer() + random.Next(Convars.BlackoutDurationMin, Convars.BlackoutDurationMax);
-                            Logging.Log("Artificial lights are now turned ON");
-                            Logging.Log($"Next blackout will be in {nextFetch}");
+                            if (Convars.Debug)
+                            {
+                                Debug.WriteLine("Artificial lights are now turned ON");
+                                Debug.WriteLine($"Next blackout will be in {nextFetch}");
+                            }
                         }
                     }
                     break;

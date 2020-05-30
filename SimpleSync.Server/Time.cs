@@ -45,10 +45,13 @@ namespace SimpleSync.Server
 
             Exports.Add("getNextTimeFetch", new Func<long>(() => nextFetch));
             // And log a couple of messages
-            Logging.Log("Time Synchronization has started");
-            Logging.Log($"Sync Mode is set to {Convars.TimeMode}");
-            Logging.Log($"Scale is set to {Convars.Scale}");
-            Logging.Log($"Time Zone is set to {Convars.TimeZone}");
+            if (Convars.Debug)
+            {
+                Debug.WriteLine("Time Synchronization has started");
+                Debug.WriteLine($"Sync Mode is set to {Convars.TimeMode}");
+                Debug.WriteLine($"Scale is set to {Convars.Scale}");
+                Debug.WriteLine($"Time Zone is set to {Convars.TimeZone}");
+            }
         }
 
         #endregion
@@ -82,7 +85,10 @@ namespace SimpleSync.Server
             minutes = parsed.Minutes;
             // And send the updated time to the clients
             TriggerClientEvent("simplesync:setTime", hours, minutes);
-            Logging.Log($"Time set to {hours:D2}:{minutes:D2} via SetTime");
+            if (Convars.Debug)
+            {
+                Debug.WriteLine($"Time set to {hours:D2}:{minutes:D2} via SetTime");
+            }
         }
 
         public bool SetTimeZone(string tz)
@@ -100,7 +106,10 @@ namespace SimpleSync.Server
 
             // If we got here, the Time Zone is valid so save it
             Convars.TimeZone = tz;
-            Logging.Log($"Time Zone set to {tz} via SetTimeZone");
+            if (Convars.Debug)
+            {
+                Debug.WriteLine($"Time Zone set to {tz} via SetTimeZone");
+            }
             return true;
         }
 
@@ -116,7 +125,10 @@ namespace SimpleSync.Server
         {
             // Just send the up to date time
             player.TriggerEvent("simplesync:setTime", hours, minutes);
-            Logging.Log($"Client {player.Handle} ({player.Name}) requested the Time");
+            if (Convars.Debug)
+            {
+                Debug.WriteLine($"Client {player.Handle} ({player.Name}) requested the Time");
+            }
         }
 
         #endregion
@@ -143,7 +155,10 @@ namespace SimpleSync.Server
                         SetTime(0, total);
                         // Set the next fetch time to the specified scale
                         nextFetch = API.GetGameTimer() + Convars.Scale;
-                        Logging.Log($"Time bump complete!");
+                        if (Convars.Debug)
+                        {
+                            Debug.WriteLine($"Time bump complete!");
+                        }
                     }
                     return;
                 // If is set to static, just return

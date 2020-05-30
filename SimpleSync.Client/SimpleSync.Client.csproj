@@ -23,7 +23,6 @@
     <PackageReference Include="CitizenFX.Core.Client" Version="1.0.2523">
       <IncludeAssets>compile</IncludeAssets>
     </PackageReference>
-    <Compile Include="../Logging.cs" />
     <Compile Include="../Convars.cs" />
   </ItemGroup>
 

@@ -13,7 +13,10 @@ namespace SimpleSync.Client
         public Lights()
         {
             TriggerServerEvent("simplesync:requestLights");
-            Logging.Log("Lights/Blackout Synchronization has started");
+            if (Convars.Debug)
+            {
+                Debug.WriteLine("Lights/Blackout Synchronization has started");
+            }
         }
 
         #endregion
