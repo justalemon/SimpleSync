@@ -5,7 +5,8 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <AssemblyName>$(AssemblyName).net</AssemblyName>
-    <DefineConstants>SERVER</DefineConstants>
+    <DefineConstants>FIVEM,SERVER</DefineConstants>
+    <Version>1.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

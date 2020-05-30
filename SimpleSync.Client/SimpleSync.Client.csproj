@@ -5,7 +5,10 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <AssemblyName>$(AssemblyName).net</AssemblyName>
-    <DefineConstants>CLIENT</DefineConstants>
+    <DefineConstants>FIVEM,CLIENT</DefineConstants>
+    <Version>1.0</Version>
+    <DebugType>embedded</DebugType>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
