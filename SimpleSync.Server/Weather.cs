@@ -136,7 +136,7 @@ namespace SimpleSync.Server
             Exports.Add("setWeatherSyncMode", new Func<int, bool>((i) => SetSyncMode(i, "simplesync_modeweather")));
 
             Exports.Add("getWeather", new Func<string>(() => currentWeather));
-            Exports.Add("setWeather", new Func<string, bool>(SetWeather));
+            Exports.Add("setWeather", new Func<string, bool, bool>(SetWeather));
             Exports.Add("getTransitionWeather", new Func<string>(() => transitionWeather));
 
             Exports.Add("getNextWeatherFetch", new Func<long>(() => nextFetch));
@@ -201,10 +201,10 @@ namespace SimpleSync.Server
 
         #region Exports
 
-        public bool SetWeather(string weather)
+        public bool SetWeather(string weather, bool force = false)
         {
             // If the weather is not valid, the Real Mode is enabled or there is a transition, return
-            if (!validWeather.Contains(weather) || Convars.WeatherMode == SyncMode.Real || transitionFinish != 0)
+            if (!validWeather.Contains(weather) || Convars.WeatherMode == SyncMode.Real || (transitionFinish != 0 && !force))
             {
                 return false;
             }
@@ -413,8 +413,9 @@ namespace SimpleSync.Server
                 return;
             }
 
-            // Convert the first parameter to upper case
+            // Convert the first parameter to upper case and check if is forced
             string newWeather = args[0].ToString().ToUpperInvariant();
+            bool force = args.Count >= 2 ? args[1].ToString().ToUpperInvariant() == "FORCE" : false;
 
             // If the first parameter is a ?
             if (newWeather == "?")
@@ -424,10 +425,10 @@ namespace SimpleSync.Server
                 return;
             }
 
-            // If weather is set to dynamic and there is a switch in progress, return
-            if (mode == SyncMode.Dynamic && transitionFinish != 0)
+            // If weather is set to dynamic and there is a switch in progress but is not forced, return
+            if (mode == SyncMode.Dynamic && transitionFinish != 0 && !force)
             {
-                Debug.WriteLine($"Weather can't be changed when there is a transition in progress");
+                Debug.WriteLine($"Weather can't be changed when there is a transition in progress and it has not been forced");
                 return;
             }
 
@@ -442,7 +443,7 @@ namespace SimpleSync.Server
 
             // At this point, the weather is valid
             // So go ahead and set it for all of the players
-            SetWeather(newWeather);
+            SetWeather(newWeather, force);
         }
         /// <summary>
         /// Command to Get and Set the sync mode.
