@@ -8,6 +8,11 @@ SimpleSync is a script for FiveM that allows you to synchronize the Weather, Tim
 
 Unlike other Synchronization scripts, the resource is highly configurable. You can change the Dynamic Weather switches, the scale of the Time and more options. No more scripts fighting for controlling the Time and Weather! Developers have exports available that they can use.
 
+## Download
+
+* [GitHub](https://github.com/justalemon/SimpleSync/releases)
+* [AppVeyor](https://ci.appveyor.com/project/justalemon/simplesync) (experimental)
+
 # Installation
 
 In your **resources** directory, create a folder called **simplesync** and extracts the contents from the compressed file in there.
