@@ -1,4 +1,4 @@
-# SimpleSync [![AppVeyor][appveyor-img]][appveyor-url] [![Discord][discord-img]][discord-url]
+# SimpleSync<br>[![AppVeyor][appveyor-img]][appveyor-url] [![Discord][discord-img]][discord-url]
 
 SimpleSync is a script for FiveM that allows you to synchronize the Weather, Time and Lights (also called Blackout) between clients. There are multiple modes that you can use:
 
