@@ -13,11 +13,11 @@ Unlike other Synchronization scripts, the resource is highly configurable. You c
 * [GitHub](https://github.com/justalemon/SimpleSync/releases)
 * [AppVeyor](https://ci.appveyor.com/project/justalemon/simplesync) (experimental)
 
-# Installation
+## Installation
 
 In your **resources** directory, create a folder called **simplesync** and extracts the contents from the compressed file in there.
 
-# Usage
+## Usage
 
 Before using SimpleSync, disable other Time and Weather scripts like vMenu (`vmenu_enable_weather_sync` and `vmenu_enable_time_sync` convars to `false`) and vSync (stop the resource).
 
