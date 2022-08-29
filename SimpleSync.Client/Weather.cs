@@ -9,6 +9,12 @@ namespace SimpleSync.Client
     /// </summary>
     public class Weather : BaseScript
     {
+        #region Fields
+
+        private static readonly string game = API.GetGameName();
+        
+        #endregion
+        
         #region Constructor
 
         public Weather()
@@ -21,6 +27,23 @@ namespace SimpleSync.Client
             }
         }
 
+        #endregion
+        
+        #region Tools
+
+        private static void SetWeather(string weather, float time)
+        {
+            if (game == "fivem")
+            {
+                Function.Call(Hash.SET_WEATHER_TYPE_OVERTIME_PERSIST, weather, time);
+            }
+            else if (game == "redm")
+            {
+                // SET_WEATHER_TYPE
+                Function.Call((Hash)0x59174F1AFE095B5A, Game.GenerateHash(weather), true, true, true, time, true);
+            }
+        }
+        
         #endregion
 
         #region Network Events
@@ -42,7 +65,7 @@ namespace SimpleSync.Client
             API.ClearWeatherTypePersist();
 
             // Force the origin weather
-            API.SetWeatherTypeOvertimePersist(from, 0);
+            SetWeather(from, 0);
 
             // If both weathers are not the same and the duration is not zero
             if (from != to && duration != 0)
@@ -50,10 +73,8 @@ namespace SimpleSync.Client
                 // Clear any overrides set
                 API.ClearOverrideWeather();
                 API.ClearWeatherTypePersist();
-                // Convert the MS to S
-                float ms = duration == 0 ? 0 : duration / 1000f;
                 // Set the destination weather
-                API.SetWeatherTypeOvertimePersist(to, ms);
+                SetWeather(to, duration / 1000f);
                 // And wait
                 await Delay(duration);
             }
