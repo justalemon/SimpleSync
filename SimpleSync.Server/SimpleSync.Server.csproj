@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CitizenFX.Core.Server" Version="1.0.2901">
+    <PackageReference Include="CitizenFX.Core.Server" Version="1.0.5837">
       <IncludeAssets>compile</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Flurl.Http" Version="2.4.2" />
