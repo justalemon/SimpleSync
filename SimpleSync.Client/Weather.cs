@@ -79,36 +79,39 @@ namespace SimpleSync.Client
                 await Delay(duration);
             }
 
-            // Set the correct snow marks based on the weather
-            API.SetForceVehicleTrails(to == "XMAS");
-            API.SetForcePedFootstepsTracks(to == "XMAS");
-            // Set the correct water height
-            API.N_0xc54a08c85ae4d410(to == "XMAS" ? 3 : 0);
-
-            // If the weather is set to XMAS
-            if (to == "XMAS")
+            // XMAS Weather stuff on FiveM
+            if (game == "fivem")
             {
-                // Use the Ice and Snow footstep sounds
-                API.RequestScriptAudioBank("ICE_FOOTSTEPS", false);
-                API.RequestScriptAudioBank("SNOW_FOOTSTEPS", false);
-                // And use the Snow particle effects
-                API.RequestNamedPtfxAsset("core_snow");
-                while (!API.HasNamedPtfxAssetLoaded("core_snow"))
+                // Set the correct snow marks based on the weather
+                Function.Call(Hash._SET_FORCE_VEHICLE_TRAILS, to == "XMAS");
+                Function.Call(Hash._SET_FORCE_PED_FOOTSTEPS_TRACKS, to == "XMAS");
+                // Set the correct water height
+                Function.Call(Hash.WATER_OVERRIDE_SET_STRENGTH, to == "XMAS" ? 3 : 0);
+                
+                if (to == "XMAS")
                 {
-                    await Delay(0);
+                    // Use the Ice and Snow footstep sounds
+                    Function.Call(Hash.REQUEST_SCRIPT_AUDIO_BANK, "ICE_FOOTSTEPS", false);
+                    Function.Call(Hash.REQUEST_SCRIPT_AUDIO_BANK, "SNOW_FOOTSTEPS", false);
+                    // And use the Snow particle effects
+                    Function.Call(Hash.REQUEST_NAMED_PTFX_ASSET, "core_snow");
+                    while (!Function.Call<bool>(Hash.HAS_NAMED_PTFX_ASSET_LOADED, "core_snow"))
+                    {
+                        await Delay(0);
+                    }
+                    Function.Call(Hash.USE_PARTICLE_FX_ASSET, "core_snow");
                 }
-                API.UseParticleFxAssetNextCall("core_snow");
-            }
-            // If the weather is set to something else
-            else
-            {
-                // Unload the Ice and Snow foostep sounds
-                API.ReleaseNamedScriptAudioBank("ICE_FOOTSTEPS");
-                API.ReleaseNamedScriptAudioBank("SNOW_FOOTSTEPS");
-                // Remove the particle effects for Snow (if is loaded)
-                if (API.HasNamedPtfxAssetLoaded("core_snow"))
+                // If the weather is set to something else
+                else
                 {
-                    API.RemoveNamedPtfxAsset("core_snow");
+                    // Unload the Ice and Snow footstep sounds
+                    Function.Call(Hash.RELEASE_NAMED_SCRIPT_AUDIO_BANK, "ICE_FOOTSTEPS");
+                    Function.Call(Hash.RELEASE_NAMED_SCRIPT_AUDIO_BANK, "SNOW_FOOTSTEPS");
+                    // Remove the particle effects for Snow (if is loaded)
+                    if (Function.Call<bool>(Hash.HAS_NAMED_PTFX_ASSET_LOADED, "core_snow"))
+                    {
+                        Function.Call(Hash.REMOVE_NAMED_PTFX_ASSET, "core_snow");
+                    }
                 }
             }
         }
