@@ -51,17 +51,23 @@ namespace SimpleSync.Server
             {
                 response = await url.WithHeader("User-Agent", "SimpleSync (+https://github.com/justalemon/SimpleSync)").GetAsync();
             }
-            // If there was a problem with the request
+            // If there was a problem with the request, handle it as expected
             catch (FlurlHttpException e)
             {
-                // If the request was completed
                 if (e.Call.Completed)
                 {
                     Debug.WriteLine($"OpenWeatherMap returned code {(int)e.Call.HttpStatus} {e.Call.HttpStatus}!");
-                    return null;
                 }
-                // If the request was not completed
-                Debug.WriteLine($"Error when trying to request information from OpenWeatherMap: {e.Message}");
+                else
+                {
+                    Debug.WriteLine($"Error when trying to request information from OpenWeatherMap: {e.Message}");
+
+                    if (e.InnerException != null)
+                    {
+                        Debug.WriteLine(e.InnerException.Message);
+                    }
+                }
+
                 return null;
             }
 
