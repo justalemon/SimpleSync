@@ -13,6 +13,14 @@ local nextFetch = {
     ["weather"] = 0
 }
 
+function GetSyncMode(system)
+    if nextFetch[system] == nil then
+        return -1
+    end
+
+    return GetConvarInt("simplesync_mode" .. system, )
+end
+
 function SetSyncMode(mode, system)
     if type(mode) ~= "number" or modes[mode] == nil or nextFetch[system] == nil then
         return false
