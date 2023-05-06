@@ -80,10 +80,16 @@ end
 
 exports("areLightsEnabled", AreLightsEnabled)
 exports("setLights", SetLightsEnabled) -- TODO: Rename to setLightsEnabled and mark deprecated
-
 exports("getLightsSyncMode", GetLightsSyncMode)
 exports("setLightsSyncMode", SetLightsSyncMode)
 exports("getTimeSyncMode", GetTimeSyncMode)
 exports("setTimesSyncMode", SetTimeSyncMode)
 exports("getWeatherSyncMode", GetWeatherSyncMode)
 exports("setWeatherSyncMode", SetWeatherSyncMode)
+
+function RequestLights()
+    Debug("Client " .. tostring(source) .. " (" .. GetPlayerName(source) .. ") requested the Light Activation")
+    TriggerClientEvent("simplesync:setLights", source, AreLightsEnabled())
+end
+
+RegisterNetEvent("simplesync:requestLights", RequestLights)

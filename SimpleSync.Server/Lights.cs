@@ -11,23 +11,6 @@ namespace SimpleSync.Server
     /// </summary>
     public class Lights : Common
     {
-        #region Network Events
-
-        /// <summary>
-        /// Sends the updated Artificial Lights activation.
-        /// </summary>
-        [EventHandler("simplesync:requestLights")]
-        public void RequestLights([FromSource]Player player)
-        {
-            if (Convars.Debug)
-            {
-                Debug.WriteLine($"Client {player.Handle} ({player.Name}) requested the Light Activation");
-            }
-            player.TriggerEvent("simplesync:setLights", Enabled);
-        }
-
-        #endregion
-
         #region Ticks
 
         [Tick]
