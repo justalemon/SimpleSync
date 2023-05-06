@@ -30,3 +30,31 @@ function SetSyncMode(mode, system)
     nextFetch[system] = 0
     return true
 end
+
+function GetLightsSyncMode()
+    return GetSyncMode("lights")
+end
+function SetLightsSyncMode(mode)
+    return SetSyncMode(mode, "lights")
+end
+
+function GetTimeSyncMode()
+    return GetSyncMode("time")
+end
+function SetTimeSyncMode(mode)
+    return SetSyncMode(mode, "time")
+end
+
+function GetWeatherSyncMode()
+    return GetSyncMode("weather")
+end
+function SetWeatherSyncMode(mode)
+    return SetSyncMode(mode, "weather")
+end
+
+exports("getLightsSyncMode", GetLightsSyncMode)
+exports("setLightsSyncMode", SetLightsSyncMode)
+exports("getTimeSyncMode", GetTimeSyncMode)
+exports("setTimesSyncMode", SetTimeSyncMode)
+exports("getWeatherSyncMode", GetWeatherSyncMode)
+exports("setWeatherSyncMode", SetWeatherSyncMode)

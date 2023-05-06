@@ -33,9 +33,6 @@ namespace SimpleSync.Server
         public Time()
         {
             // Add a couple of exports to set the time
-            Exports.Add("getTimeSyncMode", new Func<int>(() => API.GetConvarInt("simplesync_modetime", 0)));
-            Exports.Add("setTimeSyncMode", new Func<int, bool>((i) => SetSyncMode(i, "simplesync_modetime")));
-
             Exports.Add("setTime", new Action<int, int>(SetTime));
             Exports.Add("getHours", new Func<int>(() => hours));
             Exports.Add("getMinutes", new Func<int>(() => minutes));

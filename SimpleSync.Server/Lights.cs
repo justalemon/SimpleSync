@@ -37,9 +37,6 @@ namespace SimpleSync.Server
 
         public Lights()
         {
-            Exports.Add("getLightsSyncMode", new Func<int>(() => API.GetConvarInt("simplesync_modelights", 1)));
-            Exports.Add("setLightsSyncMode", new Func<int, bool>((i) => SetSyncMode(i, "simplesync_modelights")));
-
             Exports.Add("areLightsEnabled", new Func<bool>(() => Enabled));
             Exports.Add("setLights", new Action<bool>((e) => Enabled = e));
         }
