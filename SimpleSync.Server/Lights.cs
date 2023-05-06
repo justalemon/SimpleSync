@@ -11,63 +11,6 @@ namespace SimpleSync.Server
     /// </summary>
     public class Lights : Common
     {
-        #region Ticks
-
-        [Tick]
-        public async Task UpdateLights()
-        {
-            switch (Convars.LightsMode)
-            {
-                // On dynamic mode
-                case SyncMode.Dynamic:
-                    // If the next fetch is zero, set the next blackout time and return
-                    if (nextFetch == 0)
-                    {
-                        nextFetch = API.GetGameTimer() + random.Next(Convars.BlackoutSwitchMin, Convars.BlackoutSwitchMax);
-                        if (Convars.Debug)
-                        {
-                            Debug.WriteLine($"Setting first blackout time to {nextFetch}");
-                        }
-                    }
-                    // If the current time is over or equal than the next fetch time
-                    else if (API.GetGameTimer() >= nextFetch)
-                    {
-                        // If the lights are enabled, disable them and set the next fetch time
-                        if (Enabled)
-                        {
-                            Enabled = false;
-                            TriggerClientEvent("simplesync:setLights", false);
-                            nextFetch = API.GetGameTimer() + random.Next(Convars.BlackoutDurationMin, Convars.BlackoutDurationMax);
-                            if (Convars.Debug)
-                            {
-                                Debug.WriteLine("Artificial lights are now turned OFF");
-                                Debug.WriteLine($"Blackout will finish in {nextFetch}");
-                            }
-                        }
-                        // If the lights are disabled, enable them and set the 
-                        else
-                        {
-                            Enabled = true;
-                            TriggerClientEvent("simplesync:setLights", true);
-                            nextFetch = API.GetGameTimer() + random.Next(Convars.BlackoutDurationMin, Convars.BlackoutDurationMax);
-                            if (Convars.Debug)
-                            {
-                                Debug.WriteLine("Artificial lights are now turned ON");
-                                Debug.WriteLine($"Next blackout will be in {nextFetch}");
-                            }
-                        }
-                    }
-                    break;
-                // For Static Mode, just return
-                // There is no API for Blackouts, so just ignore it
-                case SyncMode.Static:
-                case SyncMode.Real:
-                    return;
-            }
-        }
-
-        #endregion
-
         #region Commands
 
         /// <summary>

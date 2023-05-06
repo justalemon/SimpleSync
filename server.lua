@@ -93,3 +93,45 @@ function RequestLights()
 end
 
 RegisterNetEvent("simplesync:requestLights", RequestLights)
+
+function UpdateLights()
+    while true do
+        local mode = GetLightsSyncMode()
+
+        if mode == 0 then
+            local next = nextFetch["lights"]
+
+            if next == 0 then
+                -- from 10 to 30 minutes by default
+                local time = GetGameTimer() + math.random(GetConvarInt("simplesync_blackoutswitchmin", 600000),
+                                                          GetConvarInt("simplesync_blackoutswitchmax", 1800000))
+                nextFetch["lights"] = time
+                Debug("Setting first blackout time to " .. tostring(time))
+            elseif GetGameTimer() >= next then
+                local enabled = not AreLightsEnabled()
+                SetLightsEnabled(enabled)
+                TriggerClientEvent("simplesync:setLights", -1, enabled)
+
+                local time = 0
+
+                if enabled then
+                    -- from 10 to 30 minutes by default
+                    time = GetGameTimer() + math.random(GetConvarInt("simplesync_blackoutswitchmin", 600000),
+                                                        GetConvarInt("simplesync_blackoutswitchmax", 1800000))
+                else
+                    -- from 1 to 2 minutes by default
+                    time = GetGameTimer() + math.random(GetConvarInt("simplesync_blackoutdurationmin", 60000),
+                                                        GetConvarInt("simplesync_blackoutdurationmax", 120000))
+                end
+
+                nextFetch["lights"] = time
+                Debug("Artificial lights are now set to " .. tostring(enabled))
+                Debug("Blackout will finish in " .. tostring(time))
+            end
+        end
+
+        Citizen.Wait(0)
+    end
+end
+
+Citizen.CreateThread(UpdateLights)
