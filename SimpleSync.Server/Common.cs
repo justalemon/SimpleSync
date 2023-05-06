@@ -10,25 +10,6 @@ namespace SimpleSync.Server
     /// </summary>
     public class Common : BaseScript
     {
-        /// <summary>
-        /// The next time where we should check the weather.
-        /// </summary>
-        internal long nextFetch = 0;
-
-        public bool SetSyncMode(int mode, string convar)
-        {
-            // If is not defined on the enum, return
-            if (!Enum.IsDefined(typeof(SyncMode), mode))
-            {
-                return false;
-            }
-            // Otherwise, save the value
-            API.SetConvar(convar, mode.ToString());
-            // And reset the fetch time
-            nextFetch = 0;
-            return true;
-        }
-
         public void ModeCommand(List<object> args, string convar)
         {
             // If there is more than one argument
