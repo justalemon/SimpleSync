@@ -26,7 +26,7 @@ function SetSyncMode(mode, system)
         return false
     end
 
-    SetConvar("simplesync_" .. system, tostring(mode))
+    SetConvar("simplesync_mode" .. system, tostring(mode))
     nextFetch[system] = 0
     return true
 end
