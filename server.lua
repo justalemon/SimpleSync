@@ -112,7 +112,7 @@ function UpdateLights()
                 SetLightsEnabled(enabled)
                 TriggerClientEvent("simplesync:setLights", -1, enabled)
 
-                local time = 0
+                local time
 
                 if enabled then
                     -- from 10 to 30 minutes by default
