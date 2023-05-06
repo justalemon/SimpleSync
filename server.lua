@@ -31,6 +31,32 @@ function SetSyncMode(mode, system)
     return true
 end
 
+function AreLightsEnabled()
+   return GetConvarInt("simplesync_lights", 1) ~= 0
+end
+
+function SetLightsEnabled(activation)
+    value = 0
+
+    if type(activation) == "number" then
+        if activation == 0 then
+            value = 0
+        else
+            value = 1
+        end
+    elseif type(activation) == "boolean" then
+        if activation then
+            value = 1
+        else
+            value = 0
+        end
+    else
+        return
+    end
+
+    SetConvar("simplesync_lights", tostring(value))
+end
+
 function GetLightsSyncMode()
     return GetSyncMode("lights")
 end
@@ -51,6 +77,9 @@ end
 function SetWeatherSyncMode(mode)
     return SetSyncMode(mode, "weather")
 end
+
+exports("areLightsEnabled", AreLightsEnabled)
+exports("setLights", SetLightsEnabled) -- TODO: Rename to setLightsEnabled and mark deprecated
 
 exports("getLightsSyncMode", GetLightsSyncMode)
 exports("setLightsSyncMode", SetLightsSyncMode)

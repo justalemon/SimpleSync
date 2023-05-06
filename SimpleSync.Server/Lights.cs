@@ -11,38 +11,6 @@ namespace SimpleSync.Server
     /// </summary>
     public class Lights : Common
     {
-        #region Fields
-
-        /// <summary>
-        /// The RNG thingy.
-        /// </summary>
-        private static readonly Random random = new Random();
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// The current activation status for the Light Sources.
-        /// </summary>
-        public static bool Enabled
-        {
-            get => API.GetConvarInt("simplesync_lights", 1) != 0;
-            set => API.SetConvar("simplesync_lights", Convert.ToInt32(value).ToString());
-        }
-
-        #endregion
-
-        #region Constructor 
-
-        public Lights()
-        {
-            Exports.Add("areLightsEnabled", new Func<bool>(() => Enabled));
-            Exports.Add("setLights", new Action<bool>((e) => Enabled = e));
-        }
-
-        #endregion
-
         #region Network Events
 
         /// <summary>
