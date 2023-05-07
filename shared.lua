@@ -5,3 +5,13 @@ function Debug(message)
 
     print(message)
 end
+
+function ToBoolean(value)
+    if value == "true" then
+        return true
+    elseif value == "false" then
+        return false
+    end
+
+    return nil
+end
