@@ -154,4 +154,22 @@ function OnLightsCommand(_, args, _)
     print("The light activation has been set to " .. tostring(activation))
 end
 
+function OnLightsModeCommand(_, args, _)
+    if #args == 0 then
+        print("The current lights mode is set to " .. tostring(modes[GetLightsSyncMode()]))
+        return
+    end
+
+    local mode = tonumber(args[1])
+
+    if modes[mode] == nil then
+        print("The mode you have specified is not valid!")
+        return
+    end
+
+    SetLightsSyncMode(mode)
+    print("The Lights Sync mode has been set to " .. modes[mode])
+end
+
 RegisterCommand("lights", OnLightsCommand, true)
+RegisterCommand("lightsmode", OnLightsModeCommand, true)
