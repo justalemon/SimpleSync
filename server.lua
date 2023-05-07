@@ -135,3 +135,23 @@ function UpdateLights()
 end
 
 Citizen.CreateThread(UpdateLights)
+
+function OnLightsCommand(_, args, _)
+    if #args == 0 then
+        print("The activation of the lights is set to " .. tostring(AreLightsEnabled()))
+        return
+    end
+
+    local activation = ToBoolean(args[1])
+
+    if activation == nil then
+        print("The value specified is not valid!")
+        return
+    end
+
+    SetLightsEnabled(activation)
+    TriggerClientEvent("simplesync:setLights", -1, activation)
+    print("The light activation has been set to " .. tostring(activation))
+end
+
+RegisterCommand("lights", OnLightsCommand, true)
