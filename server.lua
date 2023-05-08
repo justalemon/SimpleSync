@@ -284,6 +284,10 @@ function OnTimeCommand(_, args, raw)
     print("The time is now " .. string.format("%.2d", currentHours) .. ":" .. string.format("%.2d", currentMinutes))
 end
 
+function OnTimeModeCommand(_, args, _)
+    GetOrSetMode(args, "time")
+end
+
 function OnGameTimerCommand()
     print("Current Game Time is " .. tostring(GetGameTimer()))
 end
@@ -291,4 +295,5 @@ end
 RegisterCommand("lights", OnLightsCommand, true)
 RegisterCommand("lightsmode", OnLightsModeCommand, true)
 RegisterCommand("time", OnTimeCommand, true)
+RegisterCommand("timemode", OnTimeModeCommand, true)
 RegisterCommand("gametimer", OnGameTimerCommand, true)

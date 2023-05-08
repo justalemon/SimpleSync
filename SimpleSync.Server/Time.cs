@@ -174,11 +174,6 @@ namespace SimpleSync.Server
                 Debug.WriteLine("Use the /timezones command to show all of the TZs");
             }
         }
-        /// <summary>
-        /// Command to Get and Set the sync mode.
-        /// </summary>
-        [Command("timemode", Restricted = true)]
-        public void TimeModeCommand(int source, List<object> args, string raw) => ModeCommand(args, "simplesync_modetime");
 
         #endregion
     }
