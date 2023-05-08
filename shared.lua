@@ -6,6 +6,12 @@ function Debug(message)
     print(message)
 end
 
+function MinutesToHM(totalMinutes)
+    local hours = math.floor(totalMinutes / 60)
+    local minutes = math.floor(math.fmod(totalMinutes / 60, 1) * 60)
+    return hours, minutes
+end
+
 function ToBoolean(value)
     if value == "true" then
         return true
