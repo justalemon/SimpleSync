@@ -133,68 +133,6 @@ namespace SimpleSync.Server
         #region Commands
 
         /// <summary>
-        /// Command to Get and Set the time.
-        /// </summary>
-        [Command("time", Restricted = true)]
-        public void TimeCommand(int source, List<object> args, string raw)
-        {
-            switch (Convars.TimeMode)
-            {
-                // If the synchronization is disabled, show a message and return
-                default:
-                    Debug.WriteLine("Time synchronization is Disabled");
-                    return;
-                // If the sync mode is set to Real, show the IRL Time
-                case SyncMode.Real:
-                    DateTime tz = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, Convars.TimeZone);
-                    Debug.WriteLine($"Time Zone is set to {Convars.TimeZone}");
-                    Debug.WriteLine($"The current time is {tz.Hour:D2}:{tz.Minute:D2}");
-                    return;
-                // For Dynamic and Static
-                case SyncMode.Dynamic:
-                case SyncMode.Static:
-                    // If we have zero arguments, show the time and return
-                    if (args.Count == 0)
-                    {
-                        Debug.WriteLine($"The time is set to {hours:D2}:{minutes:D2}");
-                        return;
-                    }
-
-                    // If there is single argument and is separated by :
-                    if (args.Count == 1)
-                    {
-                        // Convart it to a string
-                        string repr = args[0].ToString();
-
-                        // If it contains two dots
-                        if (repr.Contains(":"))
-                        {
-                            // Convert the items and add them back
-                            string[] newArgs = repr.Split(':');
-                            args.Clear();
-                            args.AddRange(newArgs);
-                        }
-                        // If it does not, add a zero
-                        else
-                        {
-                            args.Add(0);
-                        }
-                    }
-
-                    // Now, time to parse them
-                    if (!int.TryParse(args[0].ToString(), out int newHours) || !int.TryParse(args[1].ToString(), out int newMinutes))
-                    {
-                        Debug.WriteLine("One of the parameters are not valid numbers.");
-                        return;
-                    }
-
-                    // If we got here, the numbers are valid
-                    SetTime(newHours, newMinutes);
-                    Debug.WriteLine($"The time was set to {newHours:D2}:{newMinutes:D2}");
-                    break;
-            }
-        }
-        /// <summary>
         /// Command that shows the available Time Zones for the Real Time.
         /// </summary>
         [Command("timezones", Restricted = true)]

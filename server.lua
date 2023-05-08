@@ -190,6 +190,8 @@ function UpdateTime()
         elseif mode == 2 then -- luacheck: ignore 542
             -- TODO: Implement real mode
         end
+
+        Citizen.Wait(0)
     end
 end
 
@@ -231,5 +233,48 @@ function OnLightsModeCommand(_, args, _)
     print("The Lights Sync mode has been set to " .. modes[mode])
 end
 
+function OnTimeCommand(_, args, raw)
+    local mode = GetTimeSyncMode()
+
+    if mode == -1 then
+        print("Time Synchronization is disabled")
+        return
+    end
+
+    if #args == 0 then
+        print("The time is " .. string.format("%.2d", currentHours) .. ":" .. string.format("%.2d", currentMinutes))
+        return
+    end
+
+    local hours
+    local minutes
+
+    if #args == 1 then
+        local split = {}
+        for slice in string.gmatch("01:01", "([^:]+):?") do
+            split[#split + 1] = slice
+        end
+
+        if #split >= 2 then
+            hours = tonumber(split[1])
+            minutes = tonumber(split[2]) or 0
+        end
+    elseif #args == 2 then
+        hours = tonumber(args[1])
+        minutes = tonumber(args[2])
+    end
+
+    if hours == nil or minutes == nil then
+        print("Expected HH:MM, HH or HH MM, got " .. raw)
+        return
+    end
+
+    -- TODO: Add overflow checks
+
+    SetTime(hours, minutes)
+    print("The time is now " .. string.format("%.2d", currentHours) .. ":" .. string.format("%.2d", currentMinutes))
+end
+
 RegisterCommand("lights", OnLightsCommand, true)
 RegisterCommand("lightsmode", OnLightsModeCommand, true)
+RegisterCommand("time", OnTimeCommand, true)
