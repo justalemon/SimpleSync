@@ -185,9 +185,9 @@ function UpdateTime()
                 nextFetch["time"] = GetGameTimer() + GetConvarInt("simplesync_scale", 2000)
                 Debug("Time bump complete!")
             end
-        elseif mode == 1 then
+        elseif mode == 1 then -- luacheck: ignore 542
             -- do nothing
-        elseif mode == 2 then
+        elseif mode == 2 then -- luacheck: ignore 542
             -- TODO: Implement real mode
         end
     end
