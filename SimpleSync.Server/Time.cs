@@ -14,14 +14,6 @@ namespace SimpleSync.Server
         #region Fields
 
         /// <summary>
-        /// The current hours.
-        /// </summary>
-        private int hours = 0;
-        /// <summary>
-        /// The current minutes.
-        /// </summary>
-        private int minutes = 0;
-        /// <summary>
         /// The default Time Zone for the current environment.
         /// </summary>
         private readonly string defaultTimeZone = GetDefaultTimezone();
@@ -33,7 +25,6 @@ namespace SimpleSync.Server
         public Time()
         {
             // Add a couple of exports to set the time
-            Exports.Add("setTime", new Action<int, int>(SetTime));
             Exports.Add("getHours", new Func<int>(() => hours));
             Exports.Add("getMinutes", new Func<int>(() => minutes));
 
@@ -72,21 +63,6 @@ namespace SimpleSync.Server
         #endregion
 
         #region Exports
-
-        public void SetTime(int hour, int minute)
-        {
-            // Feed it into a timespan
-            TimeSpan parsed = TimeSpan.FromMinutes((hour * 60) + minute);
-            // Save the individual values
-            hours = parsed.Hours;
-            minutes = parsed.Minutes;
-            // And send the updated time to the clients
-            TriggerClientEvent("simplesync:setTime", hours, minutes);
-            if (Convars.Debug)
-            {
-                Debug.WriteLine($"Time set to {hours:D2}:{minutes:D2} via SetTime");
-            }
-        }
 
         public bool SetTimeZone(string tz)
         {

@@ -12,6 +12,10 @@ local nextFetch = {
     ["time"] = 0,
     ["weather"] = 0
 }
+-- The current hours.
+local currentHours = 0
+-- The current minutes.
+local currentMinutes = 0
 
 function GetSyncMode(system)
     if nextFetch[system] == nil then
@@ -78,6 +82,21 @@ function SetWeatherSyncMode(mode)
     return SetSyncMode(mode, "weather")
 end
 
+function SetTime(hours, minutes)
+    hours = tonumber(hours)
+    minutes = tonumber(minutes)
+
+    if hours == nil or minutes == nil then
+        return
+    end
+
+    currentHours = hours
+    currentMinutes = minutes
+
+    TriggerClientEvent("simplesync:setTime", -1, hours, minutes)
+    Debug("Time set to " .. tostring(hours) .. ":" .. tostring(minutes) .. " via SetTime")
+end
+
 exports("areLightsEnabled", AreLightsEnabled)
 exports("setLights", SetLightsEnabled) -- TODO: Rename to setLightsEnabled and mark deprecated
 exports("getLightsSyncMode", GetLightsSyncMode)
@@ -86,6 +105,8 @@ exports("getTimeSyncMode", GetTimeSyncMode)
 exports("setTimesSyncMode", SetTimeSyncMode)
 exports("getWeatherSyncMode", GetWeatherSyncMode)
 exports("setWeatherSyncMode", SetWeatherSyncMode)
+
+exports("setTime", SetTime)
 
 function RequestLights()
     Debug("Client " .. tostring(source) .. " (" .. GetPlayerName(source) .. ") requested the Light Activation")
