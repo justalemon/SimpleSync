@@ -175,11 +175,6 @@ namespace SimpleSync.Server
             }
         }
         /// <summary>
-        /// Shows the current internal time of the game.
-        /// </summary>
-        [Command("gametimer", Restricted = true)]
-        public void GameTimerCommand() => Debug.WriteLine($"Current Game Time is {API.GetGameTimer()}");
-        /// <summary>
         /// Command to Get and Set the sync mode.
         /// </summary>
         [Command("timemode", Restricted = true)]

@@ -275,6 +275,11 @@ function OnTimeCommand(_, args, raw)
     print("The time is now " .. string.format("%.2d", currentHours) .. ":" .. string.format("%.2d", currentMinutes))
 end
 
+function OnGameTimerCommand()
+    print("Current Game Time is " .. tostring(GetGameTimer()))
+end
+
 RegisterCommand("lights", OnLightsCommand, true)
 RegisterCommand("lightsmode", OnLightsModeCommand, true)
 RegisterCommand("time", OnTimeCommand, true)
+RegisterCommand("gametimer", OnGameTimerCommand, true)
