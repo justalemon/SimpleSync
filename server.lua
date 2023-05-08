@@ -171,7 +171,30 @@ function UpdateLights()
     end
 end
 
+function UpdateTime()
+    while true do
+        local mode = GetTimeSyncMode()
+
+        if mode == 0 then
+            local next = nextFetch["time"]
+
+            if GetGameTimer() >= next then
+                local totalMinutes = (currentHours * 60) + currentMinutes + GetConvarInt("simplesync_increase", 1)
+                local hours, minutes = MinutesToHM(totalMinutes)
+                SetTime(hours, minutes)
+                nextFetch["time"] = GetGameTimer() + GetConvarInt("simplesync_scale", 2000)
+                Debug("Time bump complete!")
+            end
+        elseif mode == 1 then
+            -- do nothing
+        elseif mode == 2 then
+            -- TODO: Implement real mode
+        end
+    end
+end
+
 Citizen.CreateThread(UpdateLights)
+Citizen.CreateThread(UpdateTime)
 
 function OnLightsCommand(_, args, _)
     if #args == 0 then

@@ -96,27 +96,6 @@ namespace SimpleSync.Server
             // Check the Time Sync Mode
             switch (Convars.TimeMode)
             {
-                // If is set to dynamic
-                case SyncMode.Dynamic:
-                    // If the game time is over or equal than the next fetch time
-                    if (API.GetGameTimer() >= nextFetch)
-                    {
-                        // Calculate the total number of minutes plus the increase
-                        int total = (hours * 60) + minutes + Convars.Increase;
-                        // Tell the system to set this specific number of minutes
-                        SetTime(0, total);
-                        // Set the next fetch time to the specified scale
-                        nextFetch = API.GetGameTimer() + Convars.Scale;
-                        if (Convars.Debug)
-                        {
-                            Debug.WriteLine($"Time bump complete!");
-                        }
-                    }
-                    return;
-                // If is set to static, just return
-                // The client already has the correct time
-                case SyncMode.Static:
-                    return;
                 // If the time is set to real
                 case SyncMode.Real:
 

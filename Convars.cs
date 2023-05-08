@@ -41,14 +41,6 @@ namespace SimpleSync
         }
 
         /// <summary>
-        /// On Dynamic Time: The time between the minute bumps.
-        /// </summary>
-        public static int Scale => API.GetConvarInt("simplesync_scale", 2000);
-        /// <summary>
-        /// On Dynamic Time: The number of minutes added when we bump the time.
-        /// </summary>
-        public static int Increase => API.GetConvarInt("simplesync_increase", 1);
-        /// <summary>
         /// The OpenWeatherMap API Key.
         /// </summary>
         public static string OpenWeatherKey => API.GetConvar("simplesync_key", "");
