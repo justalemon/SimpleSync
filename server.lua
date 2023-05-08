@@ -35,6 +35,28 @@ function SetSyncMode(mode, system)
     return true
 end
 
+function GetOrSetMode(args, system)
+    if nextFetch[system] == nil then
+        print("Unexpected system: " .. system)
+        return
+    end
+
+    if #args == 0 then
+        print("The current mode is set to " .. tostring(modes[GetSyncMode(system)]))
+        return
+    end
+
+    local mode = tonumber(args[1])
+
+    if modes[mode] == nil then
+        print("The mode you have specified is not valid!")
+        return
+    end
+
+    SetSyncMode(mode, system)
+    print("The Sync mode has been set to " .. modes[mode])
+end
+
 function AreLightsEnabled()
    return GetConvarInt("simplesync_lights", 1) ~= 0
 end
@@ -217,20 +239,7 @@ function OnLightsCommand(_, args, _)
 end
 
 function OnLightsModeCommand(_, args, _)
-    if #args == 0 then
-        print("The current lights mode is set to " .. tostring(modes[GetLightsSyncMode()]))
-        return
-    end
-
-    local mode = tonumber(args[1])
-
-    if modes[mode] == nil then
-        print("The mode you have specified is not valid!")
-        return
-    end
-
-    SetLightsSyncMode(mode)
-    print("The Lights Sync mode has been set to " .. modes[mode])
+    GetOrSetMode(args, "lights")
 end
 
 function OnTimeCommand(_, args, raw)
