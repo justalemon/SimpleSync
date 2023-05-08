@@ -113,7 +113,13 @@ function RequestLights()
     TriggerClientEvent("simplesync:setLights", source, AreLightsEnabled())
 end
 
+function RequestTime()
+    Debug("Client " .. tostring(source) .. " (" .. GetPlayerName(source) .. ") requested the Time")
+    TriggerClientEvent("simplesync:setTime", -1, currentHours, currentMinutes)
+end
+
 RegisterNetEvent("simplesync:requestLights", RequestLights)
+RegisterNetEvent("simplesync:requestTime", RequestTime)
 
 function UpdateLights()
     while true do

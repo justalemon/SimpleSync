@@ -88,24 +88,6 @@ namespace SimpleSync.Server
 
         #endregion
 
-        #region Network Events
-
-        /// <summary>
-        /// Sends the correct time back to the Client.
-        /// </summary>
-        [EventHandler("simplesync:requestTime")]
-        public void RequestTime([FromSource]Player player)
-        {
-            // Just send the up to date time
-            player.TriggerEvent("simplesync:setTime", hours, minutes);
-            if (Convars.Debug)
-            {
-                Debug.WriteLine($"Client {player.Handle} ({player.Name}) requested the Time");
-            }
-        }
-
-        #endregion
-
         #region Ticks
 
         /// <summary>
