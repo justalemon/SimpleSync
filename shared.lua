@@ -9,6 +9,12 @@ end
 function MinutesToHM(totalMinutes)
     local hours = math.floor(totalMinutes / 60)
     local minutes = totalMinutes - (hours * 60)
+
+    if hours >= 24 then
+        local days = math.floor(hours / 24)
+        hours = hours - (days * 24)
+    end
+
     return hours, minutes
 end
 
