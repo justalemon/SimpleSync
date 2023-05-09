@@ -8,7 +8,7 @@ end
 
 function MinutesToHM(totalMinutes)
     local hours = math.floor(totalMinutes / 60)
-    local minutes = math.floor(math.fmod(totalMinutes / 60, 1) * 60)
+    local minutes = totalMinutes - (hours * 60)
     return hours, minutes
 end
 
