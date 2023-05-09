@@ -264,10 +264,8 @@ function OnTimeCommand(_, args, raw)
             split[#split + 1] = slice
         end
 
-        if #split >= 2 then
-            hours = tonumber(split[1])
-            minutes = tonumber(split[2]) or 0
-        end
+        hours = tonumber(split[1])
+        minutes = tonumber(split[2]) or 0
     elseif #args == 2 then
         hours = tonumber(args[1])
         minutes = tonumber(args[2])
