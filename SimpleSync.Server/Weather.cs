@@ -112,18 +112,6 @@ namespace SimpleSync.Server
         /// The weather switches to be used.
         /// </summary>
         private static Dictionary<string, List<string>> switches = new Dictionary<string, List<string>>();
-        /// <summary>
-        /// The current weather.
-        /// </summary>
-        private string currentWeather = "EXTRASUNNY";
-        /// <summary>
-        /// The weather that we are going to use.
-        /// </summary>
-        private string transitionWeather = "EXTRASUNNY";
-        /// <summary>
-        /// The time where the transition between the weather.
-        /// </summary>
-        private long transitionFinish = 0;
 
         #endregion
 

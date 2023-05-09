@@ -16,6 +16,12 @@ local nextFetch = {
 local currentHours = 0
 -- The current minutes.
 local currentMinutes = 0
+-- The current weather.
+local currentWeather = "EXTRASUNNY"
+-- The weather that we are going to use.
+local transitionWeather = "EXTRASUNNY"
+-- The time where the transition between the weather.
+local transitionFinish = 0
 
 function GetSyncMode(system)
     if nextFetch[system] == nil then
