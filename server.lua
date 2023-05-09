@@ -260,7 +260,7 @@ function OnTimeCommand(_, args, raw)
 
     if #args == 1 then
         local split = {}
-        for slice in string.gmatch("01:01", "([^:]+):?") do
+        for slice in string.gmatch(args[1], "([^:]+):?") do
             split[#split + 1] = slice
         end
 
