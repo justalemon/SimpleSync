@@ -133,6 +133,10 @@ function GetMinutes()
     return currentMinutes
 end
 
+function GetWeather()
+    return currentWeather
+end
+
 exports("areLightsEnabled", AreLightsEnabled)
 exports("setLights", SetLightsEnabled) -- TODO: Rename to setLightsEnabled and mark deprecated
 exports("getLightsSyncMode", GetLightsSyncMode)
@@ -145,6 +149,8 @@ exports("setWeatherSyncMode", SetWeatherSyncMode)
 exports("setTime", SetTime)
 exports("getHours", GetHours)
 exports("getMinutes", GetMinutes)
+
+exports("getWeather", GetWeather)
 
 function RequestLights()
     Debug("Client " .. tostring(source) .. " (" .. GetPlayerName(source) .. ") requested the Light Activation")
