@@ -152,6 +152,55 @@ function GetWeather()
     return currentWeather
 end
 
+function SetWeather(weather, force)
+    if type(weather) ~= "string" then
+        print("Unexpected weather type in SetWeather call, got " .. type(weather))
+        return false
+    end
+
+    if force == nil then
+        force = false
+    end
+
+    local valid = false
+
+    for _, value in validWeather do
+        if value == weather then
+            valid = true
+            break
+        end
+    end
+
+    if not valid then
+        print("Weather " .. weather .. " was not found")
+        return false
+    end
+
+    local mode = GetWeatherSyncMode()
+
+    if mode == 0 then -- Dynamic
+        if transitionFinish ~= 0 and not force then
+            print("Attempted to change the weather naturally, but there is a transition in progress")
+            return false
+        end
+
+        transitionWeather = weather
+        local time = GetConvarInt("simplesync_transition", 10000)
+        TriggerClientEvent("simplesync:setWeather", -1, currentWeather, transitionWeather, time);
+        transitionFinish = GetGameTimer() + time
+        Debug("Started weather switch to " .. weather .. " (from " .. currentWeather .. ")")
+        Debug("The transition will finish on " .. tostring(transitionFinish))
+        return true
+    elseif mode == 1 then -- static
+        currentWeather = weather
+        TriggerClientEvent("simplesync:setWeather", -1, currentWeather, currentWeather, 0)
+        Debug("Weather was set to " .. weather)
+        return true
+    end
+
+    return false
+end
+
 exports("areLightsEnabled", AreLightsEnabled)
 exports("setLights", SetLightsEnabled) -- TODO: Rename to setLightsEnabled and mark deprecated
 exports("getLightsSyncMode", GetLightsSyncMode)
@@ -166,6 +215,7 @@ exports("getHours", GetHours)
 exports("getMinutes", GetMinutes)
 
 exports("getWeather", GetWeather)
+exports("setWeather", SetWeather)
 
 function RequestLights()
     Debug("Client " .. tostring(source) .. " (" .. GetPlayerName(source) .. ") requested the Light Activation")

@@ -57,10 +57,6 @@ namespace SimpleSync
             set => API.SetConvar("simplesync_timezone", value);
         }
         /// <summary>
-        /// On Dynamic Weather: The time between the switch from Weather A and Weather B.
-        /// </summary>
-        public static int Transition => API.GetConvarInt("simplesync_transition", 10000);
-        /// <summary>
         /// On Dynamic Weather: The minimum time between one weather and the other.
         /// </summary>
         public static int MinSwitch => API.GetConvarInt("simplesync_switchmin", 600000); // 10 Minutes

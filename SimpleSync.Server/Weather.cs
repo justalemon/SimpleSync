@@ -102,7 +102,6 @@ namespace SimpleSync.Server
         public Weather()
         {
             // Add the exports
-            Exports.Add("setWeather", new Func<string, bool, bool>(SetWeather));
             Exports.Add("getTransitionWeather", new Func<string>(() => transitionWeather));
 
             Exports.Add("getNextWeatherFetch", new Func<long>(() => nextFetch));
@@ -161,47 +160,6 @@ namespace SimpleSync.Server
 
             // If we got here, return a random weather
             return weathers[random.Next(weathers.Count)];
-        }
-
-        #endregion
-
-        #region Exports
-
-        public bool SetWeather(string weather, bool force = false)
-        {
-            // If the weather is not valid, the Real Mode is enabled or there is a transition, return
-            if (!validWeather.Contains(weather) || Convars.WeatherMode == SyncMode.Real || (transitionFinish != 0 && !force))
-            {
-                return false;
-            }
-
-            // If the dynamic mode is being used, save it for a transition
-            if (Convars.WeatherMode == SyncMode.Dynamic)
-            {
-                transitionWeather = weather;
-                TriggerClientEvent("simplesync:setWeather", currentWeather, transitionWeather, Convars.Transition);
-                transitionFinish = API.GetGameTimer() + Convars.Transition;
-                if (Convars.Debug)
-                {
-                    Debug.WriteLine($"Started weather switch to {weather} (from {currentWeather})");
-                    Debug.WriteLine($"The transition will finish on {transitionFinish}");
-                }
-                return true;
-            }
-            // If the static mode is being used, send it instantly
-            else if (Convars.WeatherMode == SyncMode.Static)
-            {
-                currentWeather = weather;
-                TriggerClientEvent("simplesync:setWeather", currentWeather, currentWeather, 0);
-                if (Convars.Debug)
-                {
-                    Debug.WriteLine($"Weather was set to {weather}");
-                }
-                return true;
-            }
-
-            // If we got here, the weather type is invalid
-            return false;
         }
 
         #endregion
