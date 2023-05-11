@@ -16,6 +16,21 @@ local nextFetch = {
 local currentHours = 0
 -- The current minutes.
 local currentMinutes = 0
+-- The valid weather names.
+local validWeather = {
+    "CLEAR",
+    "EXTRASUNNY",
+    "CLOUDS",
+    "OVERCAST",
+    "RAIN",
+    "CLEARING",
+    "THUNDER",
+    "SMOG",
+    "FOGGY",
+    "XMAS",
+    "SNOWLIGHT",
+    "BLIZZARD"
+}
 -- The current weather.
 local currentWeather = "EXTRASUNNY"
 -- The weather that we are going to use.

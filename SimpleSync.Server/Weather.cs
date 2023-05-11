@@ -19,24 +19,6 @@ namespace SimpleSync.Server
         /// </summary>
         private static readonly Random random = new Random();
         /// <summary>
-        /// The valid weather names.
-        /// </summary>
-        private static readonly List<string> validWeather = new List<string>
-        {
-            "CLEAR",
-            "EXTRASUNNY",
-            "CLOUDS",
-            "OVERCAST",
-            "RAIN",
-            "CLEARING",
-            "THUNDER",
-            "SMOG",
-            "FOGGY",
-            "XMAS",
-            "SNOWLIGHT",
-            "BLIZZARD"
-        };
-        /// <summary>
         /// Dictionary with the associations between OpenWeather condition codes and GTA V Weather hashes.
         /// https://openweathermap.org/weather-conditions
         /// </summary>
