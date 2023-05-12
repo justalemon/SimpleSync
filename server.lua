@@ -37,6 +37,8 @@ local currentWeather = "EXTRASUNNY"
 local transitionWeather = "EXTRASUNNY"
 -- The time where the transition between the weather.
 local transitionFinish = 0
+-- The weather switches to be used.
+local switches = {}
 
 function GetSyncMode(system)
     if nextFetch[system] == nil then
@@ -387,3 +389,17 @@ RegisterCommand("lightsmode", OnLightsModeCommand, true)
 RegisterCommand("time", OnTimeCommand, true)
 RegisterCommand("timemode", OnTimeModeCommand, true)
 RegisterCommand("gametimer", OnGameTimerCommand, true)
+
+function LoadWeatherTransitions()
+    local data = LoadResourceFile(GetCurrentResourceName(), "Switch.json")
+    local parsed = json.decode(data)
+
+    if parsed == nil then
+        print("Error when parsing Switch.json: Please make sure that the file syntax is correct and try again")
+        return
+    end
+
+    switches = parsed
+end
+
+LoadWeatherTransitions()

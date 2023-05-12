@@ -90,10 +90,6 @@ namespace SimpleSync.Server
             { 803, "CLOUDS" }, // broken clouds: 51-84%
             { 804, "CLOUDS" }, // overcast clouds: 85-100%
         };
-        /// <summary>
-        /// The weather switches to be used.
-        /// </summary>
-        private static Dictionary<string, List<string>> switches = new Dictionary<string, List<string>>();
 
         #endregion
 
@@ -101,19 +97,6 @@ namespace SimpleSync.Server
 
         public Weather()
         {
-            // Get the Weather Switches as a string
-            string data = API.LoadResourceFile(API.GetCurrentResourceName(), "Switch.json");
-            // And try to parse it
-            try
-            {
-                switches = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(data);
-            }
-            // If we failed, notify it
-            catch (JsonException e)
-            {
-                Debug.WriteLine($"Error when parsing Switch.json: {e.Message}");
-            }
-
             // And log some important commands
             if (Convars.Debug)
             {
