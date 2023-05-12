@@ -120,35 +120,6 @@ namespace SimpleSync.Server
 
         #endregion
 
-        #region Network Events
-
-        /// <summary>
-        /// Sends the up to date weather to the server.
-        /// </summary>
-        [EventHandler("simplesync:requestWeather")]
-        public void RequestWeather([FromSource]Player player)
-        {
-            if (Convars.Debug)
-            {
-                Debug.WriteLine($"Client {player.Handle} ({player.Name}) requested the Weather");
-            }
-
-            switch (Convars.WeatherMode)
-            {
-                // If Dynamic weather is enabled
-                case SyncMode.Dynamic:
-                    player.TriggerEvent("simplesync:setWeather", currentWeather, transitionWeather, API.GetGameTimer() - transitionFinish);
-                    return;
-                // If the weather is set to Static or Real
-                case SyncMode.Static:
-                case SyncMode.Real:
-                    player.TriggerEvent("simplesync:setWeather", currentWeather, currentWeather, 0);
-                    return;
-            }
-        }
-
-        #endregion
-
         #region Ticks
 
         /// <summary>

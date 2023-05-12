@@ -244,8 +244,21 @@ function RequestTime()
     TriggerClientEvent("simplesync:setTime", -1, currentHours, currentMinutes)
 end
 
+function RequestWeather()
+    Debug("Client " .. tostring(source) .. " (" .. GetPlayerName(source) .. ") requested the Weather")
+
+    local mode = GetWeatherSyncMode()
+
+    if mode == 0 then -- dynamic
+        TriggerClientEvent("simplesync:setWeather", source, currentWeather, transitionWeather, GetGameTimer() - transitionFinish)
+    elseif mode == 1 or mode == 2 then
+        TriggerClientEvent("simplesync:setWeather", source, currentWeather, currentWeather, 0)
+    end
+end
+
 RegisterNetEvent("simplesync:requestLights", RequestLights)
 RegisterNetEvent("simplesync:requestTime", RequestTime)
+RegisterNetEvent("simplesync:requestWeather", RequestWeather)
 
 function UpdateLights()
     while true do
