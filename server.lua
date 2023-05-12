@@ -397,11 +397,46 @@ function OnGameTimerCommand()
     print("Current Game Time is " .. tostring(GetGameTimer()))
 end
 
+function OnWeatherCommand(_, args, _)
+    local mode = GetWeatherSyncMode()
+
+    if mode == -1 then
+        Debug("Weather synchronization is Disabled")
+        return
+    end
+
+    if #args == 0 then
+        print("The current Weather is set to " .. currentWeather)
+        return
+    end
+
+    if mode == 2 then
+        print("The weather can't be changed if OpenWeatherMap is enabled")
+        return
+    end
+
+    if args[1] == "?" then
+        print("Allowed Weather values are: " .. table.concat(validWeather, ", "))
+        return
+    end
+
+    weather = string.upper(args[1])
+    force = string.upper(args[2] or "") == "FORCE"
+
+    if mode == 0 and transitionFinish ~= 0 and not force then
+        print("Weather can't be changed when there is a transition in progress and it has not been forced")
+        return
+    end
+
+    SetWeather(weather, force)
+end
+
 RegisterCommand("lights", OnLightsCommand, true)
 RegisterCommand("lightsmode", OnLightsModeCommand, true)
 RegisterCommand("time", OnTimeCommand, true)
 RegisterCommand("timemode", OnTimeModeCommand, true)
 RegisterCommand("gametimer", OnGameTimerCommand, true)
+RegisterCommand("weather", OnWeatherCommand, true)
 
 function LoadWeatherTransitions()
     local data = LoadResourceFile(GetCurrentResourceName(), "Switch.json")

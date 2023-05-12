@@ -234,69 +234,6 @@ namespace SimpleSync.Server
         #region Commands
 
         /// <summary>
-        /// Command to Get or Set the current weather.
-        /// </summary>
-        [Command("weather", Restricted = true)]
-        public void WeatherCommand(int source, List<object> args, string raw)
-        {
-            // Get the mode and save it for later
-            SyncMode mode = Convars.WeatherMode;
-
-            // If the Weather Sync is disabled or the enum value is not valid, say it and return
-            if (mode == SyncMode.Disabled || !Enum.IsDefined(typeof(SyncMode), mode))
-            {
-                Debug.WriteLine("Weather synchronization is Disabled");
-                return;
-            }
-
-            // If there are no arguments specified
-            if (args.Count == 0)
-            {
-                // Show the current weather and return
-                Debug.WriteLine($"The current Weather is set to {currentWeather}");
-                return;
-            }
-
-            // If we have OpenWeather synchronization enabled, the weather can't be changed
-            if (mode == SyncMode.Real)
-            {
-                Debug.WriteLine("The weather can't be changed if OpenWeatherMap is enabled");
-                return;
-            }
-
-            // Convert the first parameter to upper case and check if is forced
-            string newWeather = args[0].ToString().ToUpperInvariant();
-            bool force = args.Count >= 2 ? args[1].ToString().ToUpperInvariant() == "FORCE" : false;
-
-            // If the first parameter is a ?
-            if (newWeather == "?")
-            {
-                // Show the allowed weather values and return
-                Debug.WriteLine("Allowed Weather values are: " + string.Join(", ", validWeather));
-                return;
-            }
-
-            // If weather is set to dynamic and there is a switch in progress but is not forced, return
-            if (mode == SyncMode.Dynamic && transitionFinish != 0 && !force)
-            {
-                Debug.WriteLine($"Weather can't be changed when there is a transition in progress and it has not been forced");
-                return;
-            }
-
-            // If the weather is not on the list
-            if (!validWeather.Contains(newWeather))
-            {
-                // Notify about it and return
-                Debug.WriteLine($"The weather {newWeather} is not valid");
-                Debug.WriteLine($"Use /weather ? for a list of weather");
-                return;
-            }
-
-            // At this point, the weather is valid
-            // So go ahead and set it for all of the players
-            SetWeather(newWeather, force);
-        }
-        /// <summary>
         /// Command to Get and Set the sync mode.
         /// </summary>
         [Command("weathermode", Restricted = true)]
