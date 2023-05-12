@@ -102,8 +102,6 @@ namespace SimpleSync.Server
         public Weather()
         {
             // Add the exports
-            Exports.Add("getTransitionWeather", new Func<string>(() => transitionWeather));
-
             Exports.Add("getNextWeatherFetch", new Func<long>(() => nextFetch));
 
             Exports.Add("getWeatherTransitionFinish", new Func<long>(() => transitionFinish));

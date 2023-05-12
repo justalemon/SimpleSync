@@ -201,6 +201,10 @@ function SetWeather(weather, force)
     return false
 end
 
+function GetTransitionWeather()
+    return transitionWeather
+end
+
 exports("areLightsEnabled", AreLightsEnabled)
 exports("setLights", SetLightsEnabled) -- TODO: Rename to setLightsEnabled and mark deprecated
 exports("getLightsSyncMode", GetLightsSyncMode)
@@ -216,6 +220,7 @@ exports("getMinutes", GetMinutes)
 
 exports("getWeather", GetWeather)
 exports("setWeather", SetWeather)
+exports("getTransitionWeather", GetTransitionWeather)
 
 function RequestLights()
     Debug("Client " .. tostring(source) .. " (" .. GetPlayerName(source) .. ") requested the Light Activation")
