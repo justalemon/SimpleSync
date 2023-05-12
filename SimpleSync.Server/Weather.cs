@@ -15,10 +15,6 @@ namespace SimpleSync.Server
         #region Fields
 
         /// <summary>
-        /// The RNG thingy.
-        /// </summary>
-        private static readonly Random random = new Random();
-        /// <summary>
         /// Dictionary with the associations between OpenWeather condition codes and GTA V Weather hashes.
         /// https://openweathermap.org/weather-conditions
         /// </summary>
