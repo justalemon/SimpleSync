@@ -33,7 +33,9 @@ function SetWeather(from, to, duration)
         Citizen.Wait(wait)
     end
 
+    -- luacheck: ignore 113
     SetForceVehicleTrails(to == "XMAS")
+    -- luacheck: ignore 113
     SetForcePedFootstepsTracks(to == "XMAS")
     WaterOverrideSetStrength(to == "XMAS" and 3 or 0)
 
