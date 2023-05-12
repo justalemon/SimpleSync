@@ -16,7 +16,7 @@ function SetTime(hour, minute)
 end
 
 function SetWeather(from, to, duration)
-    Debug("Started weather switch from " .. tostring(from) .. " to " .. tostring(to) .. " (" .. tostring(duration) .. "s)")
+    Debug("Started weather switch from " .. from .. " to " .. to .. " (" .. tostring(duration) .. "s)")
 
     ClearOverrideWeather()
     ClearWeatherTypePersist()
