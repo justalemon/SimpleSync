@@ -230,33 +230,5 @@ namespace SimpleSync.Server
         }
 
         #endregion
-
-        #region Commands
-
-        /// <summary>
-        /// Command to Get and Set the sync mode.
-        /// </summary>
-        [Command("weathermode", Restricted = true)]
-        public void WeatherModeCommand(int source, List<object> args, string raw) => ModeCommand(args, "simplesync_modeweather");
-        /// <summary>
-        /// Command to fetch the weather inmediately from OpenWeatherMap.
-        /// </summary>
-        [Command("fetchnow", Restricted = true)]
-        public void FetchNowCommand()
-        {
-            // If we are not using real weather synchronization, notify it and return
-            if (Convars.WeatherMode != SyncMode.Real)
-            {
-                Debug.WriteLine("This command can only be used when the Weather Mode is set to Real.");
-                return;
-            }
-
-            // Set the next fetch time to zero and say what we have just done
-            nextFetch = 0;
-            Debug.WriteLine("The fetch time was reset!");
-            Debug.WriteLine("OpenWeatherMap data should be fetched during the next tick");
-        }
-
-        #endregion
     }
 }

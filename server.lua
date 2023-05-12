@@ -431,12 +431,31 @@ function OnWeatherCommand(_, args, _)
     SetWeather(weather, force)
 end
 
+function OnWeatherModeCommand(_, args, _)
+    GetOrSetMode(args, "weather")
+end
+
+function OnFetchNowCommand(_, args, _)
+    local mode = GetWeatherSyncMode()
+
+    if mode ~= 2 then
+        print("This command can only be used when the Weather Mode is set to Real.")
+        return
+    end
+
+    nextFetch["weather"] = 0
+    print("The fetch time was reset!")
+    print("OpenWeatherMap data should be fetched during the next tick")
+end
+
 RegisterCommand("lights", OnLightsCommand, true)
 RegisterCommand("lightsmode", OnLightsModeCommand, true)
 RegisterCommand("time", OnTimeCommand, true)
 RegisterCommand("timemode", OnTimeModeCommand, true)
 RegisterCommand("gametimer", OnGameTimerCommand, true)
 RegisterCommand("weather", OnWeatherCommand, true)
+RegisterCommand("weathermode", OnWeatherModeCommand, true)
+RegisterCommand("fetchnow", OnFetchNowCommand, true)
 
 function LoadWeatherTransitions()
     local data = LoadResourceFile(GetCurrentResourceName(), "Switch.json")
