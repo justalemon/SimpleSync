@@ -209,6 +209,10 @@ function GetNextWeatherFetch()
     return nextFetch["weather"]
 end
 
+function GetWeatherTransitionFinish()
+    return transitionFinish
+end
+
 exports("areLightsEnabled", AreLightsEnabled)
 exports("setLights", SetLightsEnabled) -- TODO: Rename to setLightsEnabled and mark deprecated
 exports("getLightsSyncMode", GetLightsSyncMode)
@@ -226,6 +230,7 @@ exports("getWeather", GetWeather)
 exports("setWeather", SetWeather)
 exports("getTransitionWeather", GetTransitionWeather)
 exports("getNextWeatherFetch", GetNextWeatherFetch)
+exports("getWeatherTransitionFinish", GetWeatherTransitionFinish)
 
 function RequestLights()
     Debug("Client " .. tostring(source) .. " (" .. GetPlayerName(source) .. ") requested the Light Activation")

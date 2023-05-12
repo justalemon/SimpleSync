@@ -101,9 +101,6 @@ namespace SimpleSync.Server
 
         public Weather()
         {
-            // Add the exports
-            Exports.Add("getWeatherTransitionFinish", new Func<long>(() => transitionFinish));
-
             // Get the Weather Switches as a string
             string data = API.LoadResourceFile(API.GetCurrentResourceName(), "Switch.json");
             // And try to parse it
