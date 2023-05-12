@@ -93,22 +93,6 @@ namespace SimpleSync.Server
 
         #endregion
 
-        #region Constructor
-
-        public Weather()
-        {
-            // And log some important commands
-            if (Convars.Debug)
-            {
-                Debug.WriteLine("Weather Synchronization has started");
-                Debug.WriteLine($"Sync Mode is set to {Convars.WeatherMode}");
-                Debug.WriteLine(string.IsNullOrWhiteSpace(Convars.OpenWeatherKey) ? "No OpenWeather API Key is set" : "An OpenWeather API Key is present");
-                Debug.WriteLine(string.IsNullOrWhiteSpace(Convars.OpenWeatherCity) ? "No OpenWeather City is set" : $"OpenWeather City is set to {Convars.OpenWeatherCity}");
-            }
-        }
-
-        #endregion
-
         #region Tools
 
         /// <summary>
