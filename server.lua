@@ -40,6 +40,22 @@ local transitionFinish = 0
 -- The weather switches to be used.
 local switches = {}
 
+function GetNextPossibleWeather(weather)
+    local possibleWeathers = switches[weather]
+
+    if possibleWeathers == nil then
+        print("Warning: There is no entry for " .. weather .. " for dynamic switches, CLEAR was returned")
+        return "CLEAR"
+    end
+
+    if #possibleWeathers == 0 then
+        print("Warning: " .. weather .. " does not has dynamic switches, CLEAR was returned")
+        return "CLEAR"
+    end
+
+    return possibleWeathers[math.random(#possibleWeathers)]
+end
+
 function GetSyncMode(system)
     if nextFetch[system] == nil then
         return -1

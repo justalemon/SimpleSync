@@ -89,37 +89,6 @@ namespace SimpleSync.Server
 
         #endregion
 
-        #region Tools
-
-        /// <summary>
-        /// Gets a new weather based on the current one.
-        /// </summary>
-        /// <returns>The new weather.</returns>
-        public string NextWeather()
-        {
-            // If the current weather does not has a weather specified, return CLEAR
-            if (!switches.ContainsKey(currentWeather))
-            {
-                Debug.WriteLine($"Warning: There is no entry for {currentWeather} for dynamic switches, CLEAR was returned");
-                return "CLEAR";
-            }
-
-            // Now, get the list for the current weather
-            List<string> weathers = switches[currentWeather];
-
-            // If there are no weathers to switch, return CLEAR
-            if (weathers.Count == 0)
-            {
-                Debug.WriteLine($"Warning: {currentWeather} does not has dynamic switches, CLEAR was returned");
-                return "CLEAR";
-            }
-
-            // If we got here, return a random weather
-            return weathers[random.Next(weathers.Count)];
-        }
-
-        #endregion
-
         #region Ticks
 
         /// <summary>
