@@ -23,7 +23,7 @@ jobs:
       - run: python -m collei natives cfxlua
       - uses: lunarmodules/luacheck@v1.1.0
       - run: rm fivem.lua
-      - run: rm -r dist/simplepassive || true && mkdir -p dist/simplepassive && cp *.lua dist/simplepassive
+      - run: rm -r dist/simplepassive || true && mkdir -p dist/simplepassive && cp *.{lua,json} dist/simplepassive
       - uses: actions/upload-artifact@v3
         with:
           name: ${{ github.event.repository.name }}
