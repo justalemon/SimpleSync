@@ -340,8 +340,44 @@ function UpdateTime()
     end
 end
 
+function UpdateWeather()
+    while true do
+        local mode = GetWeatherSyncMode()
+        local next = nextFetch["weather"]
+
+        if mode == 0 then
+            if GetGameTimer() >= next then
+                local newWeather = GetNextPossibleWeather(currentWeather)
+
+                if currentWeather ~= newWeather then
+                    SetWeather(newWeather)
+                else
+                    Debug("The weather will stay the same as before (" .. currentWeather .. ")")
+                end
+
+                -- 10 to 30 minutes
+                nextFetch["weather"] = GetGameTimer() + math.random(GetConvarInt("simplesync_switchmin", 600000),
+                                                                    GetConvarInt("simplesync_switchmax", 1800000))
+                Debug("The next weather will be fetched on " .. tostring(nextFetch["weather"]))
+                goto retnow
+            elseif GetGameTimer() >= transitionFinish and currentWeather ~= transitionWeather then
+                Debug("Transition from " .. currentWeather .. " to " .. transitionFinish .. " was finished")
+                Debug("Setting transition weather as current and resetting time")
+
+                currentWeather = transitionWeather
+                transitionFinish = 0
+            end
+        end
+
+        ::retnow::
+
+        Citizen.Wait(0)
+    end
+end
+
 Citizen.CreateThread(UpdateLights)
 Citizen.CreateThread(UpdateTime)
+Citizen.CreateThread(UpdateWeather)
 
 function OnLightsCommand(_, args, _)
     if #args == 0 then

@@ -97,52 +97,6 @@ namespace SimpleSync.Server
         [Tick]
         public async Task UpdateWeather()
         {
-            // If the Weather is set to Dynamic
-            if (Convars.WeatherMode == SyncMode.Dynamic)
-            {
-                // If the game time is over or equal than the next update/fetch time
-                if (API.GetGameTimer() >= nextFetch)
-                {
-                    // Get a random weather
-                    string newWeather = NextWeather();
-
-                    // If the weather is not the same as the current one, switch to it
-                    if (currentWeather != newWeather)
-                    {
-                        SetWeather(newWeather);
-                    }
-                    // Otherwise, don't do a switch
-                    else
-                    {
-                        if (Convars.Debug)
-                        {
-                            Debug.WriteLine($"The weather will stay the same as before ({newWeather})");
-                        }
-                    }
-
-                    // Then, save the time for the next fetch
-                    nextFetch = API.GetGameTimer() + random.Next(Convars.MinSwitch, Convars.MaxSwitch);
-
-                    if (Convars.Debug)
-                    {
-                        Debug.WriteLine($"The next weather will be fetched on {nextFetch}");
-                    }
-                    return;
-                }
-                // If the game time is over or equal than the end of the transition and two weather do not match
-                else if (API.GetGameTimer() >= transitionFinish && currentWeather != transitionWeather)
-                {
-                    if (Convars.Debug)
-                    {
-                        Debug.WriteLine($"Transition from {currentWeather} to {transitionWeather} was finished");
-                        Debug.WriteLine($"Setting transition weather as current and resetting time");
-                    }
-                    // Set the transition weather as the current weather
-                    currentWeather = transitionWeather;
-                    // And set the transition time to zero
-                    transitionFinish = 0;
-                }
-            }
             // If the Weather is set to Real
             else if (Convars.WeatherMode == SyncMode.Real)
             {
