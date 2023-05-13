@@ -266,7 +266,8 @@ function RequestWeather()
     local mode = GetWeatherSyncMode()
 
     if mode == 0 then -- dynamic
-        TriggerClientEvent("simplesync:setWeather", source, currentWeather, transitionWeather, GetGameTimer() - transitionFinish)
+        local difference = GetGameTimer() - transitionFinish
+        TriggerClientEvent("simplesync:setWeather", source, currentWeather, transitionWeather, difference)
     elseif mode == 1 or mode == 2 then
         TriggerClientEvent("simplesync:setWeather", source, currentWeather, currentWeather, 0)
     end
@@ -487,7 +488,7 @@ function OnWeatherModeCommand(_, args, _)
     GetOrSetMode(args, "weather")
 end
 
-function OnFetchNowCommand(_, args, _)
+function OnFetchNowCommand(_, _, _)
     local mode = GetWeatherSyncMode()
 
     if mode ~= 2 then
