@@ -182,7 +182,7 @@ function SetWeather(weather, force)
 
     local valid = false
 
-    for _, value in validWeather do
+    for _, value in ipairs(validWeather) do
         if value == weather then
             valid = true
             break
