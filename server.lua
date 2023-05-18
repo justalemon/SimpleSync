@@ -61,7 +61,15 @@ function GetSyncMode(system)
         return -1
     end
 
-    return GetConvarInt("simplesync_mode" .. system, 0)
+    local mode = GetConvarInt("simplesync_mode" .. system, 0)
+
+    if modes[mode] == nil then
+        print("Warning: Mode of " .. system .. " is invalid, setting it to the default")
+        SetSyncMode(0, system)
+        return 0
+    end
+
+    return mode
 end
 
 function SetSyncMode(mode, system)
