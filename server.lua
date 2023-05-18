@@ -61,7 +61,7 @@ function GetSyncMode(system)
         return -1
     end
 
-    return GetConvarInt("simplesync_mode" .. system, 1)
+    return GetConvarInt("simplesync_mode" .. system, 0)
 end
 
 function SetSyncMode(mode, system)
