@@ -14,14 +14,6 @@ namespace SimpleSync.Server
         #region Fields
 
         /// <summary>
-        /// The current hours.
-        /// </summary>
-        private int hours = 0;
-        /// <summary>
-        /// The current minutes.
-        /// </summary>
-        private int minutes = 0;
-        /// <summary>
         /// The default Time Zone for the current environment.
         /// </summary>
         private readonly string defaultTimeZone = GetDefaultTimezone();
@@ -33,13 +25,6 @@ namespace SimpleSync.Server
         public Time()
         {
             // Add a couple of exports to set the time
-            Exports.Add("getTimeSyncMode", new Func<int>(() => API.GetConvarInt("simplesync_modetime", 0)));
-            Exports.Add("setTimeSyncMode", new Func<int, bool>((i) => SetSyncMode(i, "simplesync_modetime")));
-
-            Exports.Add("setTime", new Action<int, int>(SetTime));
-            Exports.Add("getHours", new Func<int>(() => hours));
-            Exports.Add("getMinutes", new Func<int>(() => minutes));
-
             Exports.Add("setTimeZone", new Func<string, bool>(SetTimeZone));
             Exports.Add("getTimeZone", new Func<string>(() => Convars.TimeZone));
 
@@ -76,21 +61,6 @@ namespace SimpleSync.Server
 
         #region Exports
 
-        public void SetTime(int hour, int minute)
-        {
-            // Feed it into a timespan
-            TimeSpan parsed = TimeSpan.FromMinutes((hour * 60) + minute);
-            // Save the individual values
-            hours = parsed.Hours;
-            minutes = parsed.Minutes;
-            // And send the updated time to the clients
-            TriggerClientEvent("simplesync:setTime", hours, minutes);
-            if (Convars.Debug)
-            {
-                Debug.WriteLine($"Time set to {hours:D2}:{minutes:D2} via SetTime");
-            }
-        }
-
         public bool SetTimeZone(string tz)
         {
             // Try to get the timezone with the specified name
@@ -115,24 +85,6 @@ namespace SimpleSync.Server
 
         #endregion
 
-        #region Network Events
-
-        /// <summary>
-        /// Sends the correct time back to the Client.
-        /// </summary>
-        [EventHandler("simplesync:requestTime")]
-        public void RequestTime([FromSource]Player player)
-        {
-            // Just send the up to date time
-            player.TriggerEvent("simplesync:setTime", hours, minutes);
-            if (Convars.Debug)
-            {
-                Debug.WriteLine($"Client {player.Handle} ({player.Name}) requested the Time");
-            }
-        }
-
-        #endregion
-
         #region Ticks
 
         /// <summary>
@@ -144,27 +96,6 @@ namespace SimpleSync.Server
             // Check the Time Sync Mode
             switch (Convars.TimeMode)
             {
-                // If is set to dynamic
-                case SyncMode.Dynamic:
-                    // If the game time is over or equal than the next fetch time
-                    if (API.GetGameTimer() >= nextFetch)
-                    {
-                        // Calculate the total number of minutes plus the increase
-                        int total = (hours * 60) + minutes + Convars.Increase;
-                        // Tell the system to set this specific number of minutes
-                        SetTime(0, total);
-                        // Set the next fetch time to the specified scale
-                        nextFetch = API.GetGameTimer() + Convars.Scale;
-                        if (Convars.Debug)
-                        {
-                            Debug.WriteLine($"Time bump complete!");
-                        }
-                    }
-                    return;
-                // If is set to static, just return
-                // The client already has the correct time
-                case SyncMode.Static:
-                    return;
                 // If the time is set to real
                 case SyncMode.Real:
 
@@ -201,68 +132,6 @@ namespace SimpleSync.Server
 
         #region Commands
 
-        /// <summary>
-        /// Command to Get and Set the time.
-        /// </summary>
-        [Command("time", Restricted = true)]
-        public void TimeCommand(int source, List<object> args, string raw)
-        {
-            switch (Convars.TimeMode)
-            {
-                // If the synchronization is disabled, show a message and return
-                default:
-                    Debug.WriteLine("Time synchronization is Disabled");
-                    return;
-                // If the sync mode is set to Real, show the IRL Time
-                case SyncMode.Real:
-                    DateTime tz = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, Convars.TimeZone);
-                    Debug.WriteLine($"Time Zone is set to {Convars.TimeZone}");
-                    Debug.WriteLine($"The current time is {tz.Hour:D2}:{tz.Minute:D2}");
-                    return;
-                // For Dynamic and Static
-                case SyncMode.Dynamic:
-                case SyncMode.Static:
-                    // If we have zero arguments, show the time and return
-                    if (args.Count == 0)
-                    {
-                        Debug.WriteLine($"The time is set to {hours:D2}:{minutes:D2}");
-                        return;
-                    }
-
-                    // If there is single argument and is separated by :
-                    if (args.Count == 1)
-                    {
-                        // Convart it to a string
-                        string repr = args[0].ToString();
-
-                        // If it contains two dots
-                        if (repr.Contains(":"))
-                        {
-                            // Convert the items and add them back
-                            string[] newArgs = repr.Split(':');
-                            args.Clear();
-                            args.AddRange(newArgs);
-                        }
-                        // If it does not, add a zero
-                        else
-                        {
-                            args.Add(0);
-                        }
-                    }
-
-                    // Now, time to parse them
-                    if (!int.TryParse(args[0].ToString(), out int newHours) || !int.TryParse(args[1].ToString(), out int newMinutes))
-                    {
-                        Debug.WriteLine("One of the parameters are not valid numbers.");
-                        return;
-                    }
-
-                    // If we got here, the numbers are valid
-                    SetTime(newHours, newMinutes);
-                    Debug.WriteLine($"The time was set to {newHours:D2}:{newMinutes:D2}");
-                    break;
-            }
-        }
         /// <summary>
         /// Command that shows the available Time Zones for the Real Time.
         /// </summary>
@@ -305,16 +174,6 @@ namespace SimpleSync.Server
                 Debug.WriteLine("Use the /timezones command to show all of the TZs");
             }
         }
-        /// <summary>
-        /// Shows the current internal time of the game.
-        /// </summary>
-        [Command("gametimer", Restricted = true)]
-        public void GameTimerCommand() => Debug.WriteLine($"Current Game Time is {API.GetGameTimer()}");
-        /// <summary>
-        /// Command to Get and Set the sync mode.
-        /// </summary>
-        [Command("timemode", Restricted = true)]
-        public void TimeModeCommand(int source, List<object> args, string raw) => ModeCommand(args, "simplesync_modetime");
 
         #endregion
     }
