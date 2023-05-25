@@ -1,21 +1,4 @@
--- The current hours.
-local currentHours = 0
--- The current minutes.
-local currentMinutes = 0
-
-function SetLightsActivation(enabled)
-    -- Over here, True is Disabled and False is Enabled
-    -- Thanks Rockstar Games!
-    SetArtificialLightsState(not enabled)
-end
-
-function SetTime(hour, minute)
-    currentHours = hour
-    currentMinutes = minute
-    Debug("Received time " .. string.format("%.2d", currentHours) .. ":" .. string.format("%.2d", currentMinutes))
-end
-
-function SetWeather(from, to, duration)
+local function setWeather(from, to, duration)
     Debug("Started weather switch from " .. from .. " to " .. to .. " (" .. tostring(duration) .. "s)")
 
     ClearOverrideWeather()
@@ -56,21 +39,6 @@ function SetWeather(from, to, duration)
     end
 end
 
-RegisterNetEvent("simplesync:setLights", SetLightsActivation)
-RegisterNetEvent("simplesync:setTime", SetTime)
-RegisterNetEvent("simplesync:setWeather", SetWeather)
+RegisterNetEvent("simplesync:setWeather", setWeather)
 
-function UpdateTime()
-    while true do
-        NetworkOverrideClockTime(currentHours, currentMinutes, 0)
-        Citizen.Wait(0)
-    end
-end
-
-Citizen.CreateThread(UpdateTime)
-
-TriggerServerEvent("simplesync:requestLights")
-TriggerServerEvent("simplesync:requestTime")
 TriggerServerEvent("simplesync:requestWeather")
-
-Debug("SimpleSync has started!")
