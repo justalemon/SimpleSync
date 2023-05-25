@@ -25,7 +25,9 @@ local function setTime(hours, minutes)
     currentMinutes = minutes
 
     TriggerClientEvent("simplesync:setTime", -1, hours, minutes)
-    Debug("Time set to " .. tostring(hours) .. ":" .. tostring(minutes) .. " via SetTime")
+    if GetConvarInt("simplesync_debugbump", 0) ~= 0 then
+        Debug("Time set to " .. tostring(hours) .. ":" .. tostring(minutes) .. " via SetTime")
+    end
 end
 
 local function getHours()
@@ -59,7 +61,10 @@ local function updateTime()
                 local hours, minutes = MinutesToHM(totalMinutes)
                 setTime(hours, minutes)
                 nextFetch = GetGameTimer() + GetConvarInt("simplesync_scale", 2000)
-                Debug("Time bump complete!")
+
+                if GetConvarInt("simplesync_debugbump", 0) ~= 0 then
+                    Debug("Time bump complete!")
+                end
             end
         elseif mode == 1 then -- luacheck: ignore 542
             -- do nothing
